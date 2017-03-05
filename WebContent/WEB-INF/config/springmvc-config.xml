@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+	    http://www.springframework.org/schema/tx   
+	    http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<context:component-scan base-package="com.feja.blog.controller"></context:component-scan>
+	<context:component-scan base-package="com.feja.blog.service"></context:component-scan>
+	<mvc:annotation-driven/>
+	
+	<!-- 公开路径 -->
+	<mvc:resources mapping="/public/**" location="/public/"/>
+	
+	<!-- 返回内容配置 -->
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+    	<property name="mediaTypes">
+        	<map>
+                <entry key="atom" value="application/atom+xml"/>
+                <entry key="html" value="text/html"/>
+                <entry key="json" value="application/json"/>
+            </map>
+        </property>
+        <property name="viewResolvers">
+            <list>
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+            </list>
+        </property>
+    </bean>
+	<bean class="com.feja.blog.context.SpringContextHolder" lazy-init="false" />
+	
+	<!-- 数据库配置 -->
+    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+	    <property name="driverClassName">  
+	        <value>org.gjt.mm.mysql.Driver</value>  
+	    </property>  
+	    <property name="url">  
+	        <value>jdbc:mysql://localhost:3306/feja_blog?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=true</value>  
+	    </property>  
+	    <property name="username">  
+	        <value>root</value>  
+	    </property>  
+	    <property name="password">  
+	        <value>123456</value>
+	    </property>
+	</bean>  
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+	    <property name="dataSource" ref="jdbcDataSource" />  
+	    <property name="configLocation" value="classpath:mybatis-config.xml"></property>  
+	</bean>
+	
+	<bean id="articleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.feja.blog.mapper.ArticleMapper"></property>  
+	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
+	</bean>
+	
+	<bean id="articleTypeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.feja.blog.mapper.ArticleTypeMapper"></property>  
+	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
+	</bean>
+	
+	<bean id="configMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.feja.blog.mapper.ConfigMapper"></property>  
+	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
+	</bean>
+	
+	<bean id="TypeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.feja.blog.mapper.TypeMapper"></property>  
+	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
+	</bean>
+	
+	<bean id="recommandMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.feja.blog.mapper.RecommandMapper"></property>  
+	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
+	</bean>
+</beans>

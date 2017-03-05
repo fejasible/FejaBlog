@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.feja.blog.mapper.ConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.feja.blog.model.Config" >
+    <id column="config_id" property="configId" jdbcType="INTEGER" />
+    <result column="blog_name" property="blogName" jdbcType="VARCHAR" />
+    <result column="copyright" property="copyright" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.feja.blog.model.ConfigWithBLOBs" extends="BaseResultMap" >
+    <result column="blog_describe" property="blogDescribe" jdbcType="LONGVARBINARY" />
+    <result column="profile" property="profile" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    config_id, blog_name, copyright, username, password
+  </sql>
+  <sql id="Blob_Column_List" >
+    blog_describe, profile
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from config
+    where config_id = #{configId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from config
+    where config_id = #{configId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.feja.blog.model.ConfigWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="configId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into config (blog_name, copyright, username, 
+      password, blog_describe, profile
+      )
+    values (#{blogName,jdbcType=VARCHAR}, #{copyright,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{blogDescribe,jdbcType=LONGVARBINARY}, #{profile,jdbcType=LONGVARBINARY}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.feja.blog.model.ConfigWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="configId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="blogName != null" >
+        blog_name,
+      </if>
+      <if test="copyright != null" >
+        copyright,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="blogDescribe != null" >
+        blog_describe,
+      </if>
+      <if test="profile != null" >
+        profile,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="blogName != null" >
+        #{blogName,jdbcType=VARCHAR},
+      </if>
+      <if test="copyright != null" >
+        #{copyright,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="blogDescribe != null" >
+        #{blogDescribe,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="profile != null" >
+        #{profile,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.feja.blog.model.ConfigWithBLOBs" >
+    update config
+    <set >
+      <if test="blogName != null" >
+        blog_name = #{blogName,jdbcType=VARCHAR},
+      </if>
+      <if test="copyright != null" >
+        copyright = #{copyright,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="blogDescribe != null" >
+        blog_describe = #{blogDescribe,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="profile != null" >
+        profile = #{profile,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where config_id = #{configId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.feja.blog.model.ConfigWithBLOBs" >
+    update config
+    set blog_name = #{blogName,jdbcType=VARCHAR},
+      copyright = #{copyright,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      blog_describe = #{blogDescribe,jdbcType=LONGVARBINARY},
+      profile = #{profile,jdbcType=LONGVARBINARY}
+    where config_id = #{configId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.feja.blog.model.Config" >
+    update config
+    set blog_name = #{blogName,jdbcType=VARCHAR},
+      copyright = #{copyright,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR}
+    where config_id = #{configId,jdbcType=INTEGER}
+  </update>
+</mapper>
