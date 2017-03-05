@@ -7,7 +7,7 @@
         <mapper resource="com/feja/blog/mapping/ArticleMapper.xml"/>
         <mapper resource="com/feja/blog/mapping/ArticleTypeMapper.xml"/>
         <mapper resource="com/feja/blog/mapping/ConfigMapper.xml"/>
-        <mapper resource="com/feja/blog/mapping/RecommandMapper.xml"/>
+        <mapper resource="com/feja/blog/mapping/RecommendMapper.xml"/>
         <mapper resource="com/feja/blog/mapping/TypeMapper.xml"/>
     </mappers>  
 </configuration>

@@ -15,7 +15,7 @@ public class Article {
 
     private Date date;
 
-    private byte[] content;
+    private String content;
 
     public Integer getArticleId() {
         return articleId;
@@ -65,11 +65,11 @@ public class Article {
         this.date = date;
     }
 
-    public byte[] getContent() {
+    public String getContent() {
         return content;
     }
 
-    public void setContent(byte[] content) {
-        this.content = content;
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 }

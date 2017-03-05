@@ -9,15 +9,105 @@
     <result column="password" property="password" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.feja.blog.model.ConfigWithBLOBs" extends="BaseResultMap" >
-    <result column="blog_describe" property="blogDescribe" jdbcType="LONGVARBINARY" />
-    <result column="profile" property="profile" jdbcType="LONGVARBINARY" />
+    <result column="blog_describe" property="blogDescribe" jdbcType="LONGVARCHAR" />
+    <result column="profile" property="profile" jdbcType="LONGVARCHAR" />
   </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
   <sql id="Base_Column_List" >
     config_id, blog_name, copyright, username, password
   </sql>
   <sql id="Blob_Column_List" >
     blog_describe, profile
   </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.feja.blog.model.ConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.feja.blog.model.ConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -30,6 +120,12 @@
     delete from config
     where config_id = #{configId,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByExample" parameterType="com.feja.blog.model.ConfigExample" >
+    delete from config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
   <insert id="insert" parameterType="com.feja.blog.model.ConfigWithBLOBs" >
     <selectKey resultType="java.lang.Integer" keyProperty="configId" order="AFTER" >
       SELECT LAST_INSERT_ID()
@@ -38,7 +134,7 @@
       password, blog_describe, profile
       )
     values (#{blogName,jdbcType=VARCHAR}, #{copyright,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{blogDescribe,jdbcType=LONGVARBINARY}, #{profile,jdbcType=LONGVARBINARY}
+      #{password,jdbcType=VARCHAR}, #{blogDescribe,jdbcType=LONGVARCHAR}, #{profile,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.feja.blog.model.ConfigWithBLOBs" >
@@ -80,13 +176,72 @@
         #{password,jdbcType=VARCHAR},
       </if>
       <if test="blogDescribe != null" >
-        #{blogDescribe,jdbcType=LONGVARBINARY},
+        #{blogDescribe,jdbcType=LONGVARCHAR},
       </if>
       <if test="profile != null" >
-        #{profile,jdbcType=LONGVARBINARY},
+        #{profile,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
+  <select id="countByExample" parameterType="com.feja.blog.model.ConfigExample" resultType="java.lang.Integer" >
+    select count(*) from config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update config
+    <set >
+      <if test="record.configId != null" >
+        config_id = #{record.configId,jdbcType=INTEGER},
+      </if>
+      <if test="record.blogName != null" >
+        blog_name = #{record.blogName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.copyright != null" >
+        copyright = #{record.copyright,jdbcType=VARCHAR},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.blogDescribe != null" >
+        blog_describe = #{record.blogDescribe,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.profile != null" >
+        profile = #{record.profile,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update config
+    set config_id = #{record.configId,jdbcType=INTEGER},
+      blog_name = #{record.blogName,jdbcType=VARCHAR},
+      copyright = #{record.copyright,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      blog_describe = #{record.blogDescribe,jdbcType=LONGVARCHAR},
+      profile = #{record.profile,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update config
+    set config_id = #{record.configId,jdbcType=INTEGER},
+      blog_name = #{record.blogName,jdbcType=VARCHAR},
+      copyright = #{record.copyright,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.feja.blog.model.ConfigWithBLOBs" >
     update config
     <set >
@@ -103,10 +258,10 @@
         password = #{password,jdbcType=VARCHAR},
       </if>
       <if test="blogDescribe != null" >
-        blog_describe = #{blogDescribe,jdbcType=LONGVARBINARY},
+        blog_describe = #{blogDescribe,jdbcType=LONGVARCHAR},
       </if>
       <if test="profile != null" >
-        profile = #{profile,jdbcType=LONGVARBINARY},
+        profile = #{profile,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where config_id = #{configId,jdbcType=INTEGER}
@@ -117,8 +272,8 @@
       copyright = #{copyright,jdbcType=VARCHAR},
       username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
-      blog_describe = #{blogDescribe,jdbcType=LONGVARBINARY},
-      profile = #{profile,jdbcType=LONGVARBINARY}
+      blog_describe = #{blogDescribe,jdbcType=LONGVARCHAR},
+      profile = #{profile,jdbcType=LONGVARCHAR}
     where config_id = #{configId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.feja.blog.model.Config" >

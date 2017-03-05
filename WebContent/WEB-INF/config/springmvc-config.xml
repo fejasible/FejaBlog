@@ -78,13 +78,13 @@
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>
 	
-	<bean id="TypeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	<bean id="typeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 	    <property name="mapperInterface" value="com.feja.blog.mapper.TypeMapper"></property>  
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>
 	
-	<bean id="recommandMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-	    <property name="mapperInterface" value="com.feja.blog.mapper.RecommandMapper"></property>  
+	<bean id="recommendMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.feja.blog.mapper.RecommendMapper"></property>  
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>
 </beans>

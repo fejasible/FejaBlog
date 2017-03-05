@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2017/3/4 23:13:56                            */
+/* Created on:     2017/3/5 12:40:20                            */
 /*==============================================================*/
 
 
@@ -10,7 +10,7 @@ drop table if exists article_type;
 
 drop table if exists config;
 
-drop table if exists recommand;
+drop table if exists recommend;
 
 drop table if exists type;
 
@@ -21,7 +21,7 @@ create table article
 (
    article_id           int not null auto_increment,
    title                varchar(255),
-   content              blob,
+   content              text,
    is_delete            int default 0,
    is_draft             int default 0,
    visible              int default 0,
@@ -47,22 +47,22 @@ create table config
 (
    config_id            int not null auto_increment,
    blog_name            varchar(255),
-   blog_describe        blob,
+   blog_describe        text,
    copyright            varchar(255),
    username             varchar(255),
    password             varchar(255),
-   profile              blob,
+   profile              text,
    primary key (config_id)
 );
 
 /*==============================================================*/
-/* Table: recommand                                             */
+/* Table: recommend                                             */
 /*==============================================================*/
-create table recommand
+create table recommend
 (
-   recomand_id          int not null auto_increment,
+   recommend_id         int not null auto_increment,
    article_id           int,
-   primary key (recomand_id)
+   primary key (recommend_id)
 );
 
 /*==============================================================*/
@@ -81,6 +81,6 @@ alter table article_type add constraint FK_Reference_3 foreign key (article_id)
 alter table article_type add constraint FK_Reference_4 foreign key (type_id)
       references type (type_id) on delete restrict on update cascade;
 
-alter table recommand add constraint FK_Reference_5 foreign key (article_id)
+alter table recommend add constraint FK_Reference_5 foreign key (article_id)
       references article (article_id) on delete restrict on update restrict;
 

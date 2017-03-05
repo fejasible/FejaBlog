@@ -1,23 +1,23 @@
 package com.feja.blog.model;
 
 public class ConfigWithBLOBs extends Config {
-    private byte[] blogDescribe;
+    private String blogDescribe;
 
-    private byte[] profile;
+    private String profile;
 
-    public byte[] getBlogDescribe() {
+    public String getBlogDescribe() {
         return blogDescribe;
     }
 
-    public void setBlogDescribe(byte[] blogDescribe) {
-        this.blogDescribe = blogDescribe;
+    public void setBlogDescribe(String blogDescribe) {
+        this.blogDescribe = blogDescribe == null ? null : blogDescribe.trim();
     }
 
-    public byte[] getProfile() {
+    public String getProfile() {
         return profile;
     }
 
-    public void setProfile(byte[] profile) {
-        this.profile = profile;
+    public void setProfile(String profile) {
+        this.profile = profile == null ? null : profile.trim();
     }
 }

@@ -1,16 +1,16 @@
 package com.feja.blog.model;
 
-public class Recommand {
-    private Integer recomandId;
+public class Recommend {
+    private Integer recommendId;
 
     private Integer articleId;
 
-    public Integer getRecomandId() {
-        return recomandId;
+    public Integer getRecommendId() {
+        return recommendId;
     }
 
-    public void setRecomandId(Integer recomandId) {
-        this.recomandId = recomandId;
+    public void setRecommendId(Integer recommendId) {
+        this.recommendId = recommendId;
     }
 
     public Integer getArticleId() {
