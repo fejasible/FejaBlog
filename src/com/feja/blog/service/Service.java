@@ -23,8 +23,8 @@ public interface Service {
 	ArrayList<Article> getArticlesByType(String type);
 	ArrayList<Article> getArticlesByType(int id);
 	ArrayList<Article> getArticlesByDate(Date date);
-	ArrayList<String[]> getAllTypes();
-	ArrayList<String[]> getAllDates();
+	ArrayList<String[]> getAllTypesSorted();
+	ArrayList<String[]> getAllDatesSorted();
 	
 	//登陆验证
 	boolean validate(String username, String password);
@@ -33,14 +33,15 @@ public interface Service {
 		//文章管理
 	int addArticle(Article article);
 	boolean editArticle(Article article);
-	boolean saveArticle(Article article);
-	boolean recycleArticle(int articleId);
-	boolean addTypeToArticle(int articleId, String type);
-	boolean addTypeToArticle(int articleId, int typeId);
+	boolean saveArticleAsDraft(Article article);
+	boolean recycleArticle(int articleId, int isDelete);
+	int addTypeToArticle(int articleId, String type);
+	int addTypeToArticle(int articleId, int typeId);
+	int removeTypeFromArticle(int articleId, int typeId);
 	boolean updateArticleVisible(Article article, boolean visible);
 	boolean updateArticleToRecommand(Article article, boolean recommand);
 		//类别管理
-	boolean addType(String type);
+	int addType(String type);
 	boolean editType(Type type);
 	boolean deleteType(Type type);
 	boolean updateTypeVisible(Type type, boolean visible);
@@ -54,7 +55,6 @@ public interface Service {
 	boolean destroyArticle(int articleId);
 		//写文章页面
 	
-	
-	
-	
+	//其他
+	ArrayList<Article> getAllArticles();
 }

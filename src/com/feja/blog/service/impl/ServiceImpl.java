@@ -1,11 +1,16 @@
 package com.feja.blog.service.impl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.Spring;
 
+import com.feja.blog.constant.BlogConstant;
 import com.feja.blog.context.SpringContextHolder;
 import com.feja.blog.mapper.ArticleMapper;
 import com.feja.blog.mapper.ArticleTypeMapper;
@@ -23,6 +28,7 @@ import com.feja.blog.model.RecommendExample;
 import com.feja.blog.model.Type;
 import com.feja.blog.model.TypeExample;
 import com.feja.blog.service.Service;
+import com.feja.blog.util.Util;
 
 @org.springframework.stereotype.Service
 public class ServiceImpl implements Service{
@@ -91,7 +97,7 @@ public class ServiceImpl implements Service{
 
 	@Override
 	public ArrayList<Article> getArticlesByType(String type) {
-		int typeId = getTypeIdByTypeString(type);
+		int typeId = getTypeByTypeString(type).getTypeId();
 		List<Integer> articleIds = getArticleIdsByTypeId(typeId);
 		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
 		ArticleExample articleExample = new ArticleExample();
@@ -105,17 +111,16 @@ public class ServiceImpl implements Service{
 	 * @param type
 	 * @return
 	 */
-	public int getTypeIdByTypeString(String type){
+	public Type getTypeByTypeString(String type){
 		TypeExample typeExample = new TypeExample();
 		TypeMapper typeMapper = SpringContextHolder.getBean("typeMapper");
 		typeExample.or().andTypeEqualTo(type);
 		typeExample.setDistinct(true);
 		List<Type> types = typeMapper.selectByExample(typeExample);
 		if(type == null || types.size() < 1){
-			return 0;
+			return null;
 		}
-		int typeId = types.get(0).getTypeId();
-		return typeId;
+		return types.get(0);
 	}
 	
 	/**
@@ -138,69 +143,211 @@ public class ServiceImpl implements Service{
 	
 
 	@Override
-	public ArrayList<Article> getArticlesByType(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Article> getArticlesByType(int typeId) {
+		List<Integer> articleIds = getArticleIdsByTypeId(typeId);
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		ArticleExample articleExample = new ArticleExample();
+		articleExample.or().andArticleIdIn(articleIds);
+		List<Article> articles = articleMapper.selectByExample(articleExample);
+		
+		return (ArrayList<Article>) articles;
 	}
 
 	@Override
 	public ArrayList<Article> getArticlesByDate(Date date) {
-		// TODO Auto-generated method stub
-		return null;
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		ArticleExample articleExample = new ArticleExample();
+		Calendar calendar = Calendar.getInstance(); 
+	    calendar.setTime(date); 
+	    calendar.add(Calendar.MONTH,1);
+		Date afterDate = calendar.getTime();
+		articleExample.or().andDateBetween(date, afterDate);
+		List<Article> articles = articleMapper.selectByExample(articleExample);
+		return (ArrayList<Article>) articles;
 	}
+	
 
 	@Override
-	public ArrayList<String[]> getAllTypes() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<String[]> getAllTypesSorted() {
+		List<Type> types = getAllTypes();
+		ArrayList<String[]> typeSorted = new ArrayList<>();
+		for(Type type: types){
+			boolean isIntypeSorted = false;
+			String typeString = type.getType();
+			for(String[] count: typeSorted){
+				if(count[0].equals(typeString)){
+					isIntypeSorted = true;
+					count[1] = String.valueOf(Integer.valueOf(count[1]) + 1);
+				}
+			}
+			if(isIntypeSorted == false){
+				typeSorted.add(new String[]{type.getType(), "1"});
+			}
+		}
+		return typeSorted;
 	}
+	
+	
+	
+	public List<Type> getAllTypes(){
+		TypeExample typeExample = new TypeExample();
+		TypeMapper typeMapper = SpringContextHolder.getBean("typeMapper");
+		List<Type> types = typeMapper.selectByExample(typeExample);
+		return types;
+	}
+	
+	
+	@Override
+	public ArrayList<Article> getAllArticles(){
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		ArticleExample articleExample = new ArticleExample();
+		List<Article> articles = articleMapper.selectByExample(articleExample);
+		return (ArrayList<Article>) articles;
+	}
+	
 
 	@Override
-	public ArrayList<String[]> getAllDates() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<String[]> getAllDatesSorted() {
+		ArrayList<String[]> datesSorted = new ArrayList<>();
+		ArrayList<Article> articles = getAllArticles();
+		for(Article article: articles){
+			String date = null;
+			try {
+				date = Util.dateToStringyyyy_MM(article.getDate());
+			} catch (ParseException e) {
+				e.printStackTrace();
+				continue;
+			}
+			boolean isIndatesSorted = false;
+			for(String[] count: datesSorted){
+				if(date.equals(count[0])){
+					isIndatesSorted = true;
+					count[0] = String.valueOf(Integer.valueOf(count[1]) + 1);
+				}
+			}
+			if(isIndatesSorted == false){
+				datesSorted.add(new String[]{date, "1"});
+			}
+		}
+		return datesSorted;
 	}
-
+	
+	
 	@Override
 	public boolean validate(String username, String password) {
-		// TODO Auto-generated method stub
+		Config config = getConfig(BlogConstant.USED_CONFIG);
+		if(config.getUsername().equals(username) && config.getPassword().equals(password)){
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public int addArticle(Article article) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(article.getTitle() == null) article.setTitle("");
+		if(article.getContent() == null) article.setContent("");
+		if(article.getIsDraft() == null) article.setIsDraft(BlogConstant.IS_NOT_DRAFT);
+		if(article.getIsDelete() == null) article.setIsDelete(BlogConstant.IS_NOT_DELETE);
+		if(article.getVisible() == null) article.setVisible(BlogConstant.IS_VISIBLE);
+		if(article.getDate() == null) article.setDate(new Date());
+
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		articleMapper.insertSelective(article);
+		return article.getArticleId();
 	}
 
 	@Override
 	public boolean editArticle(Article article) {
-		// TODO Auto-generated method stub
-		return false;
+		if(article.getArticleId() == null){
+			return false;
+		}
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		articleMapper.updateByPrimaryKeySelective(article);
+		return true;
 	}
 
 	@Override
-	public boolean saveArticle(Article article) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean saveArticleAsDraft(Article article) {
+		article.setIsDraft(BlogConstant.IS_DRAFT);
+		if(article.getArticleId() == null){
+			addArticle(article);
+		}
+		else{
+			ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+			articleMapper.updateByPrimaryKeySelective(article);
+		}
+		return true;
 	}
 
 	@Override
-	public boolean recycleArticle(int articleId) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean recycleArticle(int articleId, int isDelete) {
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		Article article = articleMapper.selectByPrimaryKey(articleId);
+		if(article == null){
+			return false;
+		}
+		article.setIsDelete(isDelete);
+		int impact = articleMapper.updateByPrimaryKeySelective(article);
+		if(impact == 0){
+			return false;
+		}
+		return true;
 	}
 
 	@Override
-	public boolean addTypeToArticle(int articleId, String type) {
-		// TODO Auto-generated method stub
-		return false;
+	public int addTypeToArticle(int articleId, String typeString) {
+		Type type = getTypeByTypeString(typeString);
+		if(type == null){
+			return 0;
+		}
+		ArticleTypeMapper articleTypeMapper = SpringContextHolder.getBean("articleTypeMapper");
+		ArticleTypeExample articleTypeExample = new ArticleTypeExample();
+		articleTypeExample.or().andArticleIdEqualTo(articleId).andTypeIdEqualTo(type.getTypeId());
+		List<ArticleType> articleTypes = articleTypeMapper.selectByExample(articleTypeExample);
+		if(articleTypes == null || articleTypes.size() == 0){
+			ArticleType articleType = new ArticleType();
+			articleType.setArticleId(articleId);
+			articleType.setTypeId(type.getTypeId());
+			articleTypeMapper.insertSelective(articleType);
+			return articleType.getArticleTypeId();
+		}
+		else{
+			return 0;
+		}
 	}
 
 	@Override
-	public boolean addTypeToArticle(int articleId, int typeId) {
-		// TODO Auto-generated method stub
-		return false;
+	public int addTypeToArticle(int articleId, int typeId) {
+		ArticleTypeMapper articleTypeMapper = SpringContextHolder.getBean("articleTypeMapper");
+		ArticleTypeExample articleTypeExample = new ArticleTypeExample();
+		articleTypeExample.or().andArticleIdEqualTo(articleId).andTypeIdEqualTo(typeId);
+		List<ArticleType> articleTypes = articleTypeMapper.selectByExample(articleTypeExample);
+		if(articleTypes == null || articleTypes.size() == 0){
+			ArticleType articleType = new ArticleType();
+			articleType.setArticleId(articleId);
+			articleType.setTypeId(typeId);
+			articleTypeMapper.insertSelective(articleType);
+			return articleType.getArticleTypeId();
+		}
+		else{
+			return 0;
+		}
+	}
+
+	
+	@Override
+	public int removeTypeFromArticle(int articleId, int typeId) {
+		ArticleTypeMapper articleTypeMapper = SpringContextHolder.getBean("articleTypeMapper");
+		ArticleTypeExample articleTypeExample = new ArticleTypeExample();
+		articleTypeExample.or().andArticleIdEqualTo(articleId).andTypeIdEqualTo(typeId);
+		List<ArticleType> articleTypes = articleTypeMapper.selectByExample(articleTypeExample);
+		if(articleTypes == null || articleTypes.size() == 0){
+			return 0;
+		}else{
+			int id = articleTypes.get(0).getArticleTypeId();
+			articleTypeMapper.deleteByPrimaryKey(id);
+			return id;
+		}
 	}
 
 	@Override
@@ -216,9 +363,9 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public boolean addType(String type) {
+	public int addType(String type) {
 		// TODO Auto-generated method stub
-		return false;
+		return 0;
 	}
 
 	@Override
@@ -265,8 +412,9 @@ public class ServiceImpl implements Service{
 
 	@Override
 	public boolean destroyArticle(int articleId) {
-		// TODO Auto-generated method stub
-		return false;
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		articleMapper.deleteByPrimaryKey(articleId);
+		return true;
 	}
 	
 	

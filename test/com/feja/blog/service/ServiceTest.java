@@ -3,12 +3,16 @@ package com.feja.blog.service;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.annotation.Resource;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.format.datetime.DateFormatter;
 
+import com.feja.blog.constant.BlogConstant;
 import com.feja.blog.model.Article;
 import com.feja.blog.model.ArticleType;
 import com.feja.blog.model.ConfigWithBLOBs;
@@ -52,9 +56,9 @@ public class ServiceTest extends TestService{
 
 	@Test
 	public void testGetArticleType() {
-		ArticleType articleType = service.getArticleType(1);
-		Assert.assertTrue(1 == articleType.getArticleTypeId());
-		Assert.assertTrue(1 == articleType.getArticleId());
+		ArticleType articleType = service.getArticleType(7);
+		Assert.assertTrue(7 == articleType.getArticleTypeId());
+		Assert.assertTrue(5 == articleType.getArticleId());
 		Assert.assertTrue(1 == articleType.getTypeId());
 	}
 
@@ -85,59 +89,113 @@ public class ServiceTest extends TestService{
 
 	@Test
 	public void testGetArticlesByTypeInt() {
-		fail("Not yet implemented");
+		ArrayList<Article> articles = service.getArticlesByType("java");
+		Assert.assertTrue(articles.size() > 0);
+		for(Article article: articles){
+			Assert.assertNotNull(article.getTitle());
+		}
 	}
 
 	@Test
-	public void testGetArticlesByDate() {
-		fail("Not yet implemented");
+	public void testGetArticlesByDate() throws Exception{
+		Date date = new Date();
+		DateFormatter dateFormatter = new DateFormatter("yyyy-MM");
+		date = dateFormatter.parse("2017-03", LocaleContextHolder.getLocale());
+		ArrayList<Article> articles = service.getArticlesByDate(date);
+		Assert.assertTrue(articles.size() > 0);
+		for(Article article: articles){
+			Assert.assertNotNull(article.getTitle());
+		}
 	}
 
 	@Test
 	public void testGetAllTypes() {
-		fail("Not yet implemented");
+		ArrayList<String[]> strings = service.getAllTypesSorted();
+		Assert.assertTrue(strings.size() > 0);
+		for(String[] string: strings){
+			Assert.assertNotNull(string[0]);
+			Assert.assertNotNull(string[1]);
+		}
 	}
 
 	@Test
 	public void testGetAllDates() {
-		fail("Not yet implemented");
+		ArrayList<String[]> strings = service.getAllDatesSorted();
+		Assert.assertTrue(strings.size() > 0);
+		for(String[] string: strings){
+			Assert.assertNotNull(string[0]);
+			Assert.assertNotNull(string[1]);
+		}
 	}
 
 	@Test
 	public void testValidate() {
-		fail("Not yet implemented");
+		boolean result = service.validate("username", "password");
+		Assert.assertTrue(result);
 	}
 
 	@Test
 	public void testAddArticle() {
-		fail("Not yet implemented");
+		Article article = new Article();
+		article.setTitle("title");
+		article.setContent("content");
+		int id = service.addArticle(article);
+		Assert.assertTrue(id > 0);
 	}
 
 	@Test
 	public void testEditArticle() {
-		fail("Not yet implemented");
+		int id = service.addArticle(new Article());
+		Article article = service.getArticle(id);
+		service.editArticle(article);
+		Article editedArticle = service.getArticle(article.getArticleId());
+		Assert.assertEquals(article.getTitle(), editedArticle.getTitle());
+		Assert.assertEquals(article.getContent(), editedArticle.getContent());
+		service.destroyArticle(id);
+		
 	}
 
 	@Test
 	public void testSaveArticle() {
-		fail("Not yet implemented");
+		int id = service.addArticle(new Article());
+		Article article = service.getArticle(id);
+		boolean result = service.saveArticleAsDraft(article);
+		Assert.assertTrue(result);
+		article = service.getArticle(id);
+		Assert.assertTrue(BlogConstant.IS_DRAFT == article.getIsDraft());
+		service.destroyArticle(id);
 	}
 
 	@Test
 	public void testRecycleArticle() {
-		fail("Not yet implemented");
+		boolean result = service.recycleArticle(8, BlogConstant.IS_NOT_DELETE);
+		Assert.assertTrue(result);
+		
 	}
 
 	@Test
 	public void testAddTypeToArticleIntString() {
-		fail("Not yet implemented");
+		int articleId = 10;
+		String typeString = "java";
+		int id = service.addTypeToArticle(articleId, typeString);
+		ArticleType articleType = service.getArticleType(id);
+		Assert.assertTrue(articleId == articleType.getArticleId());
+		Assert.assertTrue(typeString.equals(service.getType(articleType.getTypeId()).getType()));
 	}
 
 	@Test
 	public void testAddTypeToArticleIntInt() {
-		fail("Not yet implemented");
+		int articleId = 8;
+		int typeId = 1;
+		int id = service.addTypeToArticle(articleId, typeId);
+		ArticleType articleType = service.getArticleType(id);
+		Assert.assertTrue(articleId == articleType.getArticleId());
+		Assert.assertTrue(typeId == articleType.getTypeId());
+		int removeId = service.removeTypeFromArticle(articleId, typeId);
+		Assert.assertTrue(id == removeId);
+		
 	}
-
+	
 	@Test
 	public void testUpdateArticleVisible() {
 		fail("Not yet implemented");
@@ -190,7 +248,10 @@ public class ServiceTest extends TestService{
 
 	@Test
 	public void testDestroyArticle() {
-		fail("Not yet implemented");
+		Article article = new Article();
+		article.setTitle("titleWillDestroy");
+		int id = service.addArticle(article);
+		service.destroyArticle(id);
 	}
 
 }
