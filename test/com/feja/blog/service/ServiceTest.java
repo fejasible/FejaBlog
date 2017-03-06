@@ -1,11 +1,9 @@
 package com.feja.blog.service;
 
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.annotation.Resource;
+import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,18 +13,17 @@ import org.springframework.format.datetime.DateFormatter;
 import com.feja.blog.constant.BlogConstant;
 import com.feja.blog.model.Article;
 import com.feja.blog.model.ArticleType;
+import com.feja.blog.model.Config;
 import com.feja.blog.model.ConfigWithBLOBs;
 import com.feja.blog.model.Recommend;
 import com.feja.blog.model.Type;
 
 public class ServiceTest extends TestService{
 	
-	@Resource
-	private Service service;
 	
 	@Test
 	public void testGetConfig() {
-		ConfigWithBLOBs config = service.getConfig(1);
+		ConfigWithBLOBs config = service.getConfig(BlogConstant.USED_CONFIG);
 		Assert.assertTrue(1 == config.getConfigId());
 		Assert.assertEquals("Feja", config.getBlogName());
 		Assert.assertEquals("describe", config.getBlogDescribe());
@@ -38,28 +35,27 @@ public class ServiceTest extends TestService{
 
 	@Test
 	public void testGetArticle() {
-		Article article = service.getArticle(1);
-		Assert.assertTrue(1 == article.getArticleId());
-		Assert.assertEquals("标题", article.getTitle());
-		Assert.assertEquals("内容", article.getContent());
-		Assert.assertTrue(0 == article.getIsDelete());
-		Assert.assertTrue(0 == article.getIsDraft());
-		Assert.assertTrue(0 == article.getVisible());
+		Article article = service.getArticle(testArticle.getArticleId());
+		Assert.assertTrue(article != null);
 	}
 
 	@Test
 	public void testGetType() {
-		Type type = service.getType(1);
-		Assert.assertTrue(1 == type.getTypeId());
-		Assert.assertEquals("java", type.getType());
+		Type type = service.getType(testType.getTypeId());
+		Assert.assertTrue(type != null);
 	}
 
 	@Test
 	public void testGetArticleType() {
-		ArticleType articleType = service.getArticleType(7);
-		Assert.assertTrue(7 == articleType.getArticleTypeId());
-		Assert.assertTrue(5 == articleType.getArticleId());
-		Assert.assertTrue(1 == articleType.getTypeId());
+		int id = service.addTypeToArticle(testArticle.getArticleId(), testType.getTypeId());
+		ArticleType articleType = service.getArticleType(id);
+		Assert.assertTrue(articleType != null);
+		Assert.assertTrue(articleType.getArticleTypeId() == id);
+		Assert.assertEquals(articleType.getArticleId(), testArticle.getArticleId());
+		Assert.assertEquals(articleType.getTypeId(), testType.getTypeId());
+		service.removeTypeFromArticle(testArticle.getArticleId(), testType.getTypeId());
+		articleType = service.getArticleType(id);
+		Assert.assertTrue(articleType == null);
 	}
 
 	@Test
@@ -141,6 +137,7 @@ public class ServiceTest extends TestService{
 		article.setContent("content");
 		int id = service.addArticle(article);
 		Assert.assertTrue(id > 0);
+		service.destroyArticle(id);
 	}
 
 	@Test
@@ -168,82 +165,145 @@ public class ServiceTest extends TestService{
 
 	@Test
 	public void testRecycleArticle() {
-		boolean result = service.recycleArticle(8, BlogConstant.IS_NOT_DELETE);
+		int id = service.addArticle(new Article());
+		boolean result = service.recycleArticle(id, BlogConstant.IS_NOT_DELETE);
 		Assert.assertTrue(result);
+		result = service.recycleArticle(id, BlogConstant.IS_DELETE);
+		Assert.assertTrue(result);
+		service.destroyArticle(id);
 		
 	}
 
 	@Test
 	public void testAddTypeToArticleIntString() {
-		int articleId = 10;
-		String typeString = "java";
-		int id = service.addTypeToArticle(articleId, typeString);
+		int id = service.addTypeToArticle(testArticle.getArticleId(), testType.getType());
 		ArticleType articleType = service.getArticleType(id);
-		Assert.assertTrue(articleId == articleType.getArticleId());
-		Assert.assertTrue(typeString.equals(service.getType(articleType.getTypeId()).getType()));
+		Assert.assertEquals(testArticle.getArticleId(), articleType.getArticleId());
+		Assert.assertTrue(testType.getType().equals(service.getType(articleType.getTypeId()).getType()));
+		service.removeTypeFromArticle(testArticle.getArticleId(), testType.getTypeId());
 	}
 
 	@Test
 	public void testAddTypeToArticleIntInt() {
-		int articleId = 8;
-		int typeId = 1;
+		int articleId = testArticle.getArticleId();
+		String typeString = testType.getType();
+		int typeId = testType.getTypeId();
 		int id = service.addTypeToArticle(articleId, typeId);
 		ArticleType articleType = service.getArticleType(id);
 		Assert.assertTrue(articleId == articleType.getArticleId());
-		Assert.assertTrue(typeId == articleType.getTypeId());
-		int removeId = service.removeTypeFromArticle(articleId, typeId);
-		Assert.assertTrue(id == removeId);
-		
+		Assert.assertTrue(typeString.equals(service.getType(articleType.getTypeId()).getType()));
 	}
 	
 	@Test
 	public void testUpdateArticleVisible() {
-		fail("Not yet implemented");
+		int articleId = service.addArticle(new Article());
+		service.updateArticleVisible(articleId, true);
+		int result = service.getArticle(articleId).getVisible();
+		Assert.assertTrue(result == BlogConstant.IS_VISIBLE);
+		service.updateArticleVisible(articleId, false);
+		result = service.getArticle(articleId).getVisible();
+		Assert.assertTrue(result == BlogConstant.IS_NOT_VISIBLE);
+		service.destroyArticle(articleId);
 	}
 
 	@Test
 	public void testUpdateArticleToRecommand() {
-		fail("Not yet implemented");
+		int articleId = service.addArticle(new Article());
+		Assert.assertTrue(service.updateArticleToRecommend(articleId, true));
+		Assert.assertTrue(service.isArticleRecommend(articleId) == true);
+		Assert.assertTrue(service.updateArticleToRecommend(articleId, false));
+		Assert.assertTrue(service.isArticleRecommend(articleId) == false);
+		service.destroyArticle(articleId);
+		
+		
 	}
 
 	@Test
 	public void testAddType() {
-		fail("Not yet implemented");
+		String typeString = "java" + new Random().nextInt();
+		int id = service.addType(typeString);
+		Type type = service.getType(id);
+		Assert.assertTrue(type != null);
+		Assert.assertTrue(type.getType().equals(typeString));
+		Assert.assertTrue(type.getTypeId() == id);
+		
+		id = service.addType(typeString);
+		type = service.getType(id);
+		Assert.assertTrue(type == null);
+		service.deleteType(id);
 	}
 
 	@Test
 	public void testEditType() {
-		fail("Not yet implemented");
+		String typeString = "java" + new Random().nextInt();
+		String typeStringEdit = typeString + "edit";
+		int id = service.addType(typeString);
+		Type type = service.getType(id);
+		type.setType(typeStringEdit);
+		Assert.assertTrue(service.editType(type));
+		type = service.getType(id);
+		Assert.assertTrue(type.getType().equals(typeStringEdit));
+		service.deleteType(id);
 	}
 
 	@Test
 	public void testDeleteType() {
-		fail("Not yet implemented");
+		String typeString = "java" + new Random().nextInt();
+		int id = service.addType(typeString);
+		service.deleteType(id);
+		Type type = service.getType(id);
+		Assert.assertTrue(type == null);
 	}
 
+	
 	@Test
 	public void testUpdateTypeVisible() {
-		fail("Not yet implemented");
+		service.updateTypeVisible(testType.getTypeId(), true);
+		service.updateTypeVisible(testType.getTypeId(), false);
 	}
 
 	@Test
 	public void testUpdateBlogName() {
-		fail("Not yet implemented");
+		Config config = service.getConfig(BlogConstant.USED_CONFIG);
+		String blogOriginName = config.getBlogName();
+		String blogName = "testBlogName";
+		service.updateBlogName(blogName);
+		Assert.assertTrue(service.getConfig(BlogConstant.USED_CONFIG).getBlogName().equals(blogName));
+		service.updateBlogName(blogOriginName);
+		Assert.assertTrue(service.getConfig(BlogConstant.USED_CONFIG).getBlogName().equals(blogOriginName));
+		
 	}
 
 	@Test
 	public void testUpdateBlogDescribe() {
-		fail("Not yet implemented");
+		ConfigWithBLOBs config = service.getConfig(BlogConstant.USED_CONFIG);
+		String blogOriginDescribe = config.getBlogDescribe();
+		String blogDescribe = "testBlogDescribe";
+		service.updateBlogDescribe(blogDescribe);
+		Assert.assertTrue(service.getConfig(BlogConstant.USED_CONFIG).getBlogDescribe().equals(blogDescribe));
+		service.updateBlogDescribe(blogOriginDescribe);
+		Assert.assertTrue(service.getConfig(BlogConstant.USED_CONFIG).getBlogDescribe().equals(blogOriginDescribe));
 	}
 
 	@Test
 	public void testUpdateCopyRight() {
-		fail("Not yet implemented");
+		ConfigWithBLOBs config = service.getConfig(BlogConstant.USED_CONFIG);
+		String blogOriginCopyright = config.getCopyright();
+		String blogCopyright = "testCopyright";
+		service.updateCopyRight(blogCopyright);
+		Assert.assertTrue(service.getConfig(BlogConstant.USED_CONFIG).getCopyright().equals(blogCopyright));
+		service.updateCopyRight(blogOriginCopyright);
+		Assert.assertTrue(service.getConfig(BlogConstant.USED_CONFIG).getCopyright().equals(blogOriginCopyright));
 	}
 
 	@Test
-	public void testRecoverArticle() {
-		fail("Not yet implemented");
+	public void testDeleteArticle() {
+		int status = testArticle.getIsDelete();
+		service.deleteArticle(testArticle.getArticleId(), true);
+		Assert.assertTrue(service.getArticle(testArticle.getArticleId()).getIsDelete() == BlogConstant.IS_DELETE);
+		service.deleteArticle(testArticle.getArticleId(), false);
+		Assert.assertTrue(service.getArticle(testArticle.getArticleId()).getIsDelete() == BlogConstant.IS_NOT_DELETE);
+		service.deleteArticle(testArticle.getArticleId(), status == BlogConstant.IS_DELETE ? true: false);
 	}
 
 	@Test

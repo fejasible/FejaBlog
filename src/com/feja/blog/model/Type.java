@@ -5,6 +5,17 @@ public class Type {
 
     private String type;
 
+    
+    public Type(){
+    	
+    }
+    
+    public Type(int typeId, String typeString){
+    	this.typeId = typeId;
+    	this.type = typeString;
+    }
+    
+    
     public Integer getTypeId() {
         return typeId;
     }

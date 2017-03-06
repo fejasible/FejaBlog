@@ -15,6 +15,7 @@ public interface Service {
 	ConfigWithBLOBs getConfig(int configId);
 	Article getArticle(int articleId);
 	Type getType(int typeId);
+	Type getTypeByTypeString(String type);
 	ArticleType getArticleType(int articleTypeId);
 	Recommend getRecommand(int recommandId);
 	
@@ -38,20 +39,21 @@ public interface Service {
 	int addTypeToArticle(int articleId, String type);
 	int addTypeToArticle(int articleId, int typeId);
 	int removeTypeFromArticle(int articleId, int typeId);
-	boolean updateArticleVisible(Article article, boolean visible);
-	boolean updateArticleToRecommand(Article article, boolean recommand);
+	boolean updateArticleVisible(int articleId, boolean visible);
+	boolean updateArticleToRecommend(int articleId, boolean recommend);
+	boolean isArticleRecommend(int articleId);
 		//类别管理
 	int addType(String type);
 	boolean editType(Type type);
-	boolean deleteType(Type type);
-	boolean updateTypeVisible(Type type, boolean visible);
+	boolean deleteType(int typeId);
+	boolean updateTypeVisible(int typeId, boolean visible);
 		//博客配置管理
 	boolean updateBlogName(String blogName);
 	boolean updateBlogDescribe(String describe);
 	boolean updateCopyRight(String copyright);
 		//草稿箱管理
 		//回收站管理
-	boolean recoverArticle(Article article);
+	boolean deleteArticle(int articleId, boolean recover);
 	boolean destroyArticle(int articleId);
 		//写文章页面
 	

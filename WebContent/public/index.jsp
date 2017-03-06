@@ -1,30 +1,25 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Obscura</title>
-<link rel="stylesheet" type="text/css" media="all" href="style.css" />
-<link rel="stylesheet" type="text/css" href="style/css/media-queries.css" />
-<link rel="stylesheet" type="text/css" href="style/js/player/mediaelementplayer.css" />
+<link rel="stylesheet" type="text/css" media="all" href="${pageContext.request.contextPath}/public/style.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/style/css/media-queries.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/style/js/player/mediaelementplayer.css" />
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,700,700italic|Open+Sans+Condensed:300,700' rel="stylesheet" type='text/css'>
-<!--[if IE 8]>
-<link rel="stylesheet" type="text/css" href="style/css/ie8.css" media="all" />
-<![endif]-->
-<!--[if IE 9]>
-<link rel="stylesheet" type="text/css" href="style/css/ie9.css" media="all" />
-<![endif]-->
-<script type="text/javascript" src="style/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="style/js/ddsmoothmenu.js"></script>
-<script type="text/javascript" src="style/js/retina.js"></script>
-<script type="text/javascript" src="style/js/selectnav.js"></script>
-<script type="text/javascript" src="style/js/jquery.masonry.min.js"></script>
-<script type="text/javascript" src="style/js/jquery.fitvids.js"></script>
-<script type="text/javascript" src="style/js/jquery.backstretch.min.js"></script>
-<script type="text/javascript" src="style/js/mediaelement.min.js"></script>
-<script type="text/javascript" src="style/js/mediaelementplayer.min.js"></script>
-<script type="text/javascript" src="style/js/jquery.dcflickr.1.0.js"></script>
-<script type="text/javascript" src="style/js/twitter.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/ddsmoothmenu.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/retina.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/selectnav.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/jquery.masonry.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/jquery.fitvids.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/mediaelement.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/mediaelementplayer.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/jquery.dcflickr.1.0.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/twitter.min.js"></script>
 <script type="text/javascript">
 	$.backstretch("style/images/bg/1.jpg");
 </script>
@@ -38,7 +33,7 @@
 		<!-- Begin Logo -->
 		<div class="logo">
 		    <a href="index.html">
-				<img src="style/images/logo.png" alt="" />
+				<img src="${pageContext.request.contextPath}/public/style/images/logo.png" alt="" />
 			</a>
 	    </div>
 		<!-- End Logo -->
@@ -57,7 +52,7 @@
 							<li><a href="full-width.html">Full Width</a></li>
 						</ul>
 					</li>
-					<li><a href="typography.html">Styles</a>
+					<li><a href="typography.html">profile</a>
 						<ul>
 							<li><a href="typography.html">Typography</a></li>
 							<li><a href="columns.html">Columns</a></li>
@@ -75,19 +70,29 @@
 
 <!-- Begin Wrapper -->
 <div class="wrapper"><!-- Begin Intro -->
-<div class="intro">Nulla vitae elit libero, a pharetra augue. Vivamus sagittis lacus augue laoreet rutrum faucibus dolor auctor. Cras mattis consectetur purus sit amet fermentum, Vestibulum id ligula porta. </div>
+<div class="intro">行万里路</div>
 <ul class="social">
-<li><a class="rss" href="#"></a></li><li><a class="facebook" href="#"></a></li><li><a class="twitter" href="#"></a></li><li><a class="pinterest" href="#"></a></li><li><a class="dribbble" href="#"></a></li><li><a class="flickr" href="#"></a></li><li><a class="linkedin" href="#"></a></li></ul><!-- End Intro --> 
+<%-- <li><a class="rss" href="#"></a></li>
+	<li><a class="facebook" href="#"></a></li>
+	<li><a class="twitter" href="#"></a></li>
+	<li><a class="pinterest" href="#"></a></li>
+	<li><a class="dribbble" href="#"></a></li>
+	<li><a class="flickr" href="#"></a></li>
+	<li><a class="linkedin" href="#"></a></li>--%> 
+</ul><!-- End Intro --> 
 
 <!-- Begin Blog Grid -->
 <div class="blog-wrap">
 	<!-- Begin Blog -->
 	<div class="blog-grid">
-		<!-- Begin Image Format -->
+		<!-- Begin Image Format 图片 -->
+		
+		
+		<%-- 
 		<div class="post format-image box"> 
 			<div class="frame">
 				<a href="post.html">
-					<img src="style/images/art/post1.jpg" alt="" />
+					<img src="${pageContext.request.contextPath}/public/style/images/art/post1.jpg" alt="" />
 				</a>
 			</div>
 			<h2 class="title"><a href="post.html">Morning Glory</a></h2>
@@ -97,11 +102,14 @@
 				<span class="likes"><a href="#" class="likeThis">44</a></span>
 				<span class="comments"><a href="#">3</a></span>
 			</div>
-		</div>
-		<!-- End Image Format -->
+		</div> --%>
+		<!-- End Image Format --> 
 
  	
-		<!-- Begin Quote Format -->
+		<!-- Begin Quote Format 情报 -->
+		
+		
+		<%--
 		<div class="post format-quote box"> 
 			<blockquote>Scissors cuts paper, paper covers rock, rock crushes lizard, lizard poisons Spock, Spock smashes scissors, scissors decapitates lizard, lizard eats paper, paper disproves Spock, Spock vaporizes rock, and as it always has, rock crushes scissors.<cite>Sheldon Cooper</cite></blockquote>	
 			<div class="details">
@@ -110,15 +118,18 @@
 				<span class="comments"><a href="#">4</a></span>
 			</div>
 	
-		</div>
+		</div> --%>
 		<!-- End Quote Format --> 	
 
 
-		<!-- Begin Video Format -->
+		<!-- Begin Video Format 视频-->
+		
+		
+		<%-- 
 		<div class="post format-video box"> 
 			<div class="video frame"><iframe src="http://player.vimeo.com/video/40558553?title=0&byline=0&portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
 			<h2 class="title"><a href="post.html">Fragments of Iceland</a></h2>
-			<p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.</p>
+			<p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didnât listen. She packed her seven versalia, put her initial into the belt and made herself on the way.</p>
 		
 			<div class="details">
 				<span class="icon-video"><a href="#">September 13, 2012</a></span>
@@ -126,21 +137,24 @@
 				<span class="comments"><a href="#">1</a></span>
 			</div>
 			
-		</div>
+		</div> --%>
 		<!-- End Video Format --> 					
 
 
-		<!-- Begin Audio Format -->
+		<!-- Begin Audio Format 音频-->
+		
+		
+		<%-- 
 		<div class="post format-audio box"> 
 			<div class="audio-wrapper">
 				<div class="vinyl">
 					<dl>
 						<dt class="art"> 
-							<img class="highlight" src="style/images/vinyl.png" />
-							<img src="style/images/art/artwork.png" alt="" />
+							<img class="highlight" src="${pageContext.request.contextPath}/public/style/images/vinyl.png" />
+							<img src="${pageContext.request.contextPath}/public/style/images/art/artwork.png" alt="" />
 						</dt>
-						<dd class="song"><div class="icon-song"></div> Om Du Möter Varg</dd>
-						<dd class="artist"><div class="icon-artist"></div> Detektivbyrån</dd>
+						<dd class="song"><div class="icon-song"></div> Om Du MÃ¶ter Varg</dd>
+						<dd class="artist"><div class="icon-artist"></div> DetektivbyrÃ¥n</dd>
 						<dd class="album"><div class="icon-album"></div> Wermland</dd>
 					</dl>
 				</div>
@@ -149,7 +163,7 @@
 					<audio controls="" preload="none" src="http://elemisdesign.com/files/omdumotervarg.mp3"></audio>
 				</div>
 			</div>
-			<p><strong>Detektivbyrån</strong> (&#8220;The Detective Agency&#8221;) was a <a title="Sweden" href="http://en.wikipedia.org/wiki/Sweden">Swedish</a> <a title="Electronica" href="http://en.wikipedia.org/wiki/Electronica">electronica</a> and <a title="Folk music" href="http://en.wikipedia.org/wiki/Folk_music">folk music</a> trio from <a title="Gothenburg" href="http://en.wikipedia.org/wiki/Gothenburg">Gothenburg</a>. The group consisted of Anders &#8220;Flanders&#8221; Molin (<a title="Accordion" href="http://en.wikipedia.org/wiki/Accordion">accordion</a>, <a title="Music box" href="http://en.wikipedia.org/wiki/Music_box">music box</a>), Martin &#8220;MacGyver&#8221; Molin (<a title="Glockenspiel" href="http://en.wikipedia.org/wiki/Glockenspiel">glockenspiel</a>, traktofon, toy <a title="Piano" href="http://en.wikipedia.org/wiki/Piano">piano</a>, <a title="Theremin" href="http://en.wikipedia.org/wiki/Theremin">Theremin</a>) and Jon Nils Emanuel Ekström <a title="Drum kit" href="http://en.wikipedia.org/wiki/Drum_kit">drums</a>, <a title="Sound box" href="http://en.wikipedia.org/wiki/Sound_box">sound box</a>, <a title="Bell (instrument)" href="http://en.wikipedia.org/wiki/Bell_%28instrument%29">small bells</a>.</p>
+			<p><strong>DetektivbyrÃ¥n</strong> (&#8220;The Detective Agency&#8221;) was a <a title="Sweden" href="http://en.wikipedia.org/wiki/Sweden">Swedish</a> <a title="Electronica" href="http://en.wikipedia.org/wiki/Electronica">electronica</a> and <a title="Folk music" href="http://en.wikipedia.org/wiki/Folk_music">folk music</a> trio from <a title="Gothenburg" href="http://en.wikipedia.org/wiki/Gothenburg">Gothenburg</a>. The group consisted of Anders &#8220;Flanders&#8221; Molin (<a title="Accordion" href="http://en.wikipedia.org/wiki/Accordion">accordion</a>, <a title="Music box" href="http://en.wikipedia.org/wiki/Music_box">music box</a>), Martin &#8220;MacGyver&#8221; Molin (<a title="Glockenspiel" href="http://en.wikipedia.org/wiki/Glockenspiel">glockenspiel</a>, traktofon, toy <a title="Piano" href="http://en.wikipedia.org/wiki/Piano">piano</a>, <a title="Theremin" href="http://en.wikipedia.org/wiki/Theremin">Theremin</a>) and Jon Nils Emanuel EkstrÃ¶m <a title="Drum kit" href="http://en.wikipedia.org/wiki/Drum_kit">drums</a>, <a title="Sound box" href="http://en.wikipedia.org/wiki/Sound_box">sound box</a>, <a title="Bell (instrument)" href="http://en.wikipedia.org/wiki/Bell_%28instrument%29">small bells</a>.</p>
 
 			<div class="details">
 				<span class="icon-audio"><a href="#">September 7, 2012</a></span>
@@ -157,11 +171,15 @@
 				<span class="comments"><a href="#">1</a></span>
 			</div>
 	
-		</div>
+		</div> --%>
+		
+		
 		<!-- End Audio Format --> 					
 
 			
- 		<!-- Begin Standard Format -->
+ 		<!-- Begin Standard Format 标准文字 -->
+ 		
+ 		<%--
  		<div class="post format-standard box"> 
 
 			<h2 class="title"><a href="post.html">The Meridian Sun</a></h2>
@@ -174,11 +192,11 @@
 				<span class="comments"><a href="#">0</a></span>
 			</div>
 	
-		</div>
+		</div> --%>
 		<!-- End Standard Format --> 					
 
 
-		<!-- Begin Link Format -->
+		<!-- Begin Link Format 链接--><%--
 		<div class="post format-link box"> 
 
 			<h2 class="title"><a href="http://elemisfreebies.com" target="_blank">The Italic Mountains<span class="arrow">&rarr;</span></a></h2>
@@ -190,11 +208,11 @@
 				<span class="comments"><a href="#">0</a></span>
 			</div>
 		
-		</div>
+		</div> --%>
 		<!-- End Link Format --> 					
 
 
-		<!-- Begin Chat Format -->
+		<!-- Begin Chat Format 聊天 --><%--
 		<div class="post format-chat box"> 
 			<h2 class="title"><a href="post.html">Two Best Friends</a></h2>
 			<ul>
@@ -209,7 +227,7 @@
 				<span class="comments"><a href="#">0</a></span>
 			</div>
 			
-		</div>
+		</div> --%>
 		<!-- End Chat Format -->
  	
  	</div>
@@ -217,9 +235,9 @@
 </div>
 <!-- End Blog Grid -->
 
-<!-- Begin Page-navi -->
+<!-- Begin Page-navi 返回顶部 -->
     <div id="navigation">
-      <div class="nav-previous"><a href="#" ><span class="meta-nav-prev">&larr; Older posts</span></a></div>
+      <div class="nav-previous"><a href="#" ><span class="meta-nav-prev">&larr; 返回顶部</span></a></div>
       <!-- 
 			<div class="nav-next"><a href="#" ><span class="meta-nav-next">Newer posts &rarr;</span></a></div>
 			 --> 
@@ -231,14 +249,20 @@
 
 <!-- Begin Footer -->
 <div class="footer-wrapper">
-<div id="footer" class="four">
+<div id="footer" class="three">
+
+		<%-- 第一栏 --%>
 		<div id="first" class="widget-area">
+		
+			<%-- 搜索框 --%>
 			<div class="widget widget_search">
 				<h3 class="widget-title">Search</h3>
 				<form class="searchform" method="get" action="#">
 					<input type="text" name="s" value="type and hit enter" onFocus="this.value=''" onBlur="this.value='type and hit enter'"/>
 				</form>
 			</div>
+			
+			<%-- 日期归档 --%>
 			<div class="widget widget_archive">
 				<h3 class="widget-title">Archives</h3>
 				<ul>
@@ -251,25 +275,28 @@
 				</ul>
 			</div>	
 		</div><!-- #first .widget-area -->
-	
+		
+		
+		<%-- 第二栏 社交网络--%>
 		<div id="second" class="widget-area">
 			<div id="twitter-2" class="widget widget_twitter">
 					<h3 class="widget-title">Twitter</h3>
 					
 					<div id="twitter-wrapper">
 						<div id="twitter"></div>
-						<span class="username"><a href="http://twitter.com/elemisdesign">→ Follow @elemisdesign</a></span>
+						<span class="username"><a href="http://twitter.com/elemisdesign">â Follow @elemisdesign</a></span>
 					</div>
 			</div>
 		</div><!-- #second .widget-area -->
-	
+		
+		<%-- 第三栏 --%>
 		<div id="third" class="widget-area">
 		<div id="example-widget-3" class="widget example">
 			<h3 class="widget-title">Popular Posts</h3>
 			<ul class="post-list">
 			  	<li> 
 			  		<div class="frame">
-			  			<a href="#"><img src="style/images/art/s1.jpg" /></a>
+			  			<a href="#"><img src="${pageContext.request.contextPath}/public/style/images/art/s1.jpg" /></a>
 			  		</div>
 					<div class="meta">
 					    <h6><a href="#">Charming Winter</a></h6>
@@ -278,7 +305,7 @@
 				</li>
 				<li> 
 			  		<div class="frame">
-			  			<a href="#"><img src="style/images/art/s2.jpg" /></a>
+			  			<a href="#"><img src="${pageContext.request.contextPath}/public/style/images/art/s2.jpg" /></a>
 			  		</div>
 					<div class="meta">
 					    <h6><a href="#">Trickling Stream</a></h6>
@@ -287,7 +314,7 @@
 				</li>
 				<li> 
 			  		<div class="frame">
-			  			<a href="#"><img src="style/images/art/s3.jpg" /></a>
+			  			<a href="#"><img src="${pageContext.request.contextPath}/public/style/images/art/s3.jpg" /></a>
 			  		</div>
 					<div class="meta">
 					    <h6><a href="#">Morning Glory</a></h6>
@@ -299,6 +326,10 @@
 		</div>
 		</div><!-- #third .widget-area -->
 		
+		
+		
+		<%-- 第四栏 --%>
+		<%--
 		<div id="fourth" class="widget-area">
 		<div class="widget">
 			<h3 class="widget-title">Flickr</h3>
@@ -306,12 +337,15 @@
 			
 		</div>
 		</div><!-- #fourth .widget-area -->
+		 --%>
+		
+		
 	</div>
 </div>
 <div class="site-generator-wrapper">
 	<div class="site-generator">Copyright Obscura 2012. Design by <a href="http://elemisfreebies.com">elemis</a>. All rights reserved.</div>
 </div>
 <!-- End Footer --> 
-<script type="text/javascript" src="style/js/scripts.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/scripts.js"></script>
 </body>
 </html>

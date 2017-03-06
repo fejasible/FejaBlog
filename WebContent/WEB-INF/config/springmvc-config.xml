@@ -20,8 +20,9 @@
 	
 	<!-- 公开路径 -->
 	<mvc:resources mapping="/public/**" location="/public/"/>
+
 	
-	<!-- 返回内容配置 -->
+	<!-- 返回内容配置 -->       
 	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
     	<property name="mediaTypes">
         	<map>
@@ -31,7 +32,12 @@
             </map>
         </property>
         <property name="viewResolvers">
-            <list>
+            <list>    	
+				<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+				    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+				    <property name="prefix" value="/public/"/>
+				    <property name="suffix" value=".jsp"/>
+				</bean>
             </list>
         </property>
         <property name="defaultViews">
