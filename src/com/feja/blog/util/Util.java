@@ -1,6 +1,7 @@
 package com.feja.blog.util;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -12,6 +13,12 @@ public class Util{
 		DateFormatter dateFormatter = new DateFormatter("yyyy-MM");
 		String dateString = dateFormatter.print(date, LocaleContextHolder.getLocale());
 		return dateString;
+	}
+	
+	public static Date Stringyyyy_MMToDate(String dateString) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");  
+	    Date toDate = sdf.parse(dateString);
+	    return toDate;
 	}
 	
 }

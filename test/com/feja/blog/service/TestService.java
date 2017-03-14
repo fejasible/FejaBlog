@@ -1,6 +1,7 @@
 package com.feja.blog.service;
 
 import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -11,7 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.feja.blog.model.Article;
-import com.feja.blog.model.ArticleType;
 import com.feja.blog.model.Type;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,7 +47,7 @@ public class TestService {
 	
 	private Type createTestType(){
 		Type type = new Type();
-		type.setType("java" + new Random().nextInt());
+		type.setType("java" + new Random().nextInt() + UUID.randomUUID());
 		return type;
 	}
 }

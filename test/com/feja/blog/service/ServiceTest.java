@@ -76,10 +76,11 @@ public class ServiceTest extends TestService{
 
 	@Test
 	public void testGetArticlesByTypeString() {
-		ArrayList<Article> articles = service.getArticlesByType("java");
-		Assert.assertTrue(articles.size() > 0);
-		for(Article article: articles){
-			Assert.assertNotNull(article.getTitle());
+		ArrayList<Article> articles = service.getArticlesByType(testType.getType());
+		if(articles != null){
+			for(Article article: articles){
+				Assert.assertNotNull(article.getTitle());
+			}
 		}
 	}
 
@@ -227,8 +228,8 @@ public class ServiceTest extends TestService{
 		Assert.assertTrue(type.getType().equals(typeString));
 		Assert.assertTrue(type.getTypeId() == id);
 		
-		id = service.addType(typeString);
-		type = service.getType(id);
+		int id2 = service.addType(typeString);
+		type = service.getType(id2);
 		Assert.assertTrue(type == null);
 		service.deleteType(id);
 	}
@@ -313,5 +314,5 @@ public class ServiceTest extends TestService{
 		int id = service.addArticle(article);
 		service.destroyArticle(id);
 	}
-
+	
 }

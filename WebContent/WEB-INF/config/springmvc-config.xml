@@ -20,7 +20,14 @@
 	
 	<!-- 公开路径 -->
 	<mvc:resources mapping="/public/**" location="/public/"/>
-
+	
+	<!-- 拦截器  -->
+	<mvc:interceptors>  
+        <mvc:interceptor>  
+            <mvc:mapping path="/admin/**" />
+            <bean class="com.feja.blog.interceptor.SecurityInterceptor" />  
+        </mvc:interceptor>
+    </mvc:interceptors>
 	
 	<!-- 返回内容配置 -->       
 	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
@@ -83,7 +90,7 @@
 	    <property name="mapperInterface" value="com.feja.blog.mapper.ConfigMapper"></property>  
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>
-	
+		
 	<bean id="typeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 	    <property name="mapperInterface" value="com.feja.blog.mapper.TypeMapper"></property>  
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  

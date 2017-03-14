@@ -9,6 +9,7 @@ public class BlogConstant {
 	public static final int IS_NOT_DRAFT = 1;
 	public static final int IS_NOT_VISIBLE = 1;
 	public static final int IS_NOT_DELETE = 1;
-	
+	public static final String SENSSION_KEY_USERNAME = "USERNAME";
+	public static final String LOGIN_FAILED_TEXT = "请不要伤害我！";
 	
 }

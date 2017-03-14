@@ -73,11 +73,15 @@ public class ServiceImpl implements Service{
 	@Override
 	public ArrayList<Article> getAllRecommandArticles() {
 		List<Integer> articleIds = getAllrecommandArticleIds();
-		ArticleExample articleExample = new ArticleExample();
 		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
-		articleExample.or().andArticleIdIn(articleIds);
-		List<Article> articles = articleMapper.selectByExample(articleExample);
-		return (ArrayList<Article>) articles;
+		ArrayList<Article> articles = new ArrayList<>();
+		for(Integer articleId: articleIds){
+			Article article = articleMapper.selectByPrimaryKey(articleId);
+			if(article != null){
+				articles.add(article);
+			}
+		}
+		return articles;
 	}
 	
 	/**
@@ -98,9 +102,19 @@ public class ServiceImpl implements Service{
 	
 
 	@Override
-	public ArrayList<Article> getArticlesByType(String type) {
-		int typeId = getTypeByTypeString(type).getTypeId();
+	public ArrayList<Article> getArticlesByType(String typeString) {
+		if(typeString == null){
+			return null;
+		}
+		Type type = getTypeByTypeString(typeString);
+		if(type == null){
+			return null;
+		}
+		int typeId = type.getTypeId();
 		List<Integer> articleIds = getArticleIdsByTypeId(typeId);
+		if(articleIds == null || articleIds.size() == 0){
+			return null;
+		}
 		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
 		ArticleExample articleExample = new ArticleExample();
 		articleExample.or().andArticleIdIn(articleIds);
@@ -173,20 +187,30 @@ public class ServiceImpl implements Service{
 	}
 	
 
+	private List<ArticleType> getAllArticleType(){
+		ArticleTypeMapper articleTypeMapper = SpringContextHolder.getBean("articleTypeMapper");
+		return articleTypeMapper.selectByExample(new ArticleTypeExample());
+		
+	}
+	
+	
 	@Override
 	public ArrayList<String[]> getAllTypesSorted() {
-		List<Type> types = getAllTypes();
+		List<ArticleType> articleTypes = getAllArticleType();
 		ArrayList<String[]> typeSorted = new ArrayList<>();
-		for(Type type: types){
-			boolean isIntypeSorted = false;
+		
+		for(ArticleType articleType: articleTypes){
+			Type type = getType(articleType.getTypeId());
+			boolean isInTypeSorted = false;
 			String typeString = type.getType();
 			for(String[] count: typeSorted){
 				if(count[0].equals(typeString)){
-					isIntypeSorted = true;
+					isInTypeSorted = true;
 					count[1] = String.valueOf(Integer.valueOf(count[1]) + 1);
+					break;
 				}
 			}
-			if(isIntypeSorted == false){
+			if(isInTypeSorted == false){
 				typeSorted.add(new String[]{type.getType(), "1"});
 			}
 		}
@@ -228,7 +252,7 @@ public class ServiceImpl implements Service{
 			for(String[] count: datesSorted){
 				if(date.equals(count[0])){
 					isIndatesSorted = true;
-					count[0] = String.valueOf(Integer.valueOf(count[1]) + 1);
+					count[1] = String.valueOf(Integer.valueOf(count[1]) + 1);
 				}
 			}
 			if(isIndatesSorted == false){

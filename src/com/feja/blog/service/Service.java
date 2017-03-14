@@ -3,6 +3,9 @@ package com.feja.blog.service;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.feja.blog.model.Article;
 import com.feja.blog.model.ArticleType;
 import com.feja.blog.model.Config;
@@ -11,6 +14,9 @@ import com.feja.blog.model.Recommend;
 import com.feja.blog.model.Type;
 
 public interface Service {
+	
+	public Log logger = LogFactory.getLog(Service.class);
+	
 	//总括
 	ConfigWithBLOBs getConfig(int configId);
 	Article getArticle(int articleId);
