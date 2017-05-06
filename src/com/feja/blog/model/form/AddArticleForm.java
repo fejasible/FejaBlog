@@ -1,11 +1,15 @@
-package com.feja.blog.model;
+package com.feja.blog.model.form;
 
 import java.util.Date;
 
+import com.feja.blog.model.Article;
 import com.feja.blog.util.JsonUtil;
 
-public class Article {
-    private Integer articleId;
+public class AddArticleForm{
+	
+	private String typeString;
+	
+	private Integer articleId;
 
     private String title;
 
@@ -18,7 +22,26 @@ public class Article {
     private Date date;
 
     private String content;
+    
+    private Article article;
 
+
+    public AddArticleForm(){
+    	
+    }
+    
+    
+    public AddArticleForm(Article article){
+    	this.articleId = article.getArticleId();
+    	this.title = article.getTitle();
+    	this.isDelete = article.getIsDelete();
+    	this.isDraft = article.getIsDraft();
+    	this.visible = article.getVisible();
+    	this.date = article.getDate();
+    	this.content = article.getContent();
+    	this.article = article;
+    }
+    
     public Integer getArticleId() {
         return articleId;
     }
@@ -74,10 +97,35 @@ public class Article {
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
     }
+    
+
+	public String getTypeString() {
+		return typeString;
+	}
+
+	public void setTypeString(String typeString) {
+		this.typeString = typeString;
+	}
+
+
+	public Article getArticle() {
+		Article article = new Article();
+		article.setArticleId(articleId);
+		article.setContent(content);
+		article.setDate(date);
+		article.setIsDelete(isDelete);
+		article.setIsDraft(isDraft);
+		article.setTitle(title);
+		article.setVisible(visible);
+		return article;
+	}
+
+	public void setArticle(Article article) {
+		this.article = article;
+	}
 
 	@Override
 	public String toString() {
 		return JsonUtil.writeValueAsString(this);
 	}
-    
 }

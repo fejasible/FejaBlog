@@ -2,6 +2,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="st" uri="http://www.springframework.org/tags" %>
 
 <html lang="en-US">
@@ -44,7 +45,24 @@
 			
 			
 			<div class="content box">
-			博客配置
+				<h4>博客配置</h4>
+				<div class="box">
+					<form:form id="config_form" commandName="config" action="${pageContext.request.contextPath}/admin/website/manage/edit" method="post">
+						<table>
+							<tr><td><h5>博客名称:&emsp;</h5></td><td width="85%"><form:input id="blog_name" path="blogName"></form:input></td></tr>
+							<tr><td><p> </p></td></tr>
+							<tr><td><h5>博客描述:&emsp;</h5></td><td><form:input id="blog_describe" path="blogDescribe"></form:input></td></tr>
+							<tr><td><p> </p></td></tr>
+							<tr><td><h5>版权声明:&emsp;</h5></td><td><form:textarea id="copyright" path="copyright"></form:textarea></td></tr>
+							<tr><td><p> </p></td></tr>
+							<tr><td><h5>博客简介:&emsp;</h5></td><td><form:input id="profile" path="profile"></form:input></td></tr>
+							<tr><td><p> </p></td></tr>
+						</table>
+						<form:button type="submit">提交</form:button>
+						<p> </p>
+					</form:form>
+				</div>
+				
 			</div>
 			
 			<div class="sidebar box">

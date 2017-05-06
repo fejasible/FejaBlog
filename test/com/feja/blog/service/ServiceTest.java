@@ -3,6 +3,7 @@ package com.feja.blog.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.Assert;
@@ -67,7 +68,7 @@ public class ServiceTest extends TestService{
 
 	@Test
 	public void testGetAllRecommandArticles() {
-		ArrayList<Article> articles = service.getAllRecommandArticles();
+		ArrayList<Article> articles = service.getAllRecommendArticles();
 		Assert.assertTrue(articles.size() > 0);
 		for(Article article: articles){
 			Assert.assertNotNull(article.getTitle());
@@ -314,5 +315,42 @@ public class ServiceTest extends TestService{
 		int id = service.addArticle(article);
 		service.destroyArticle(id);
 	}
+	
+	
+	@Test
+	public void testGetAllArticlesNotDelete(){
+		ArrayList<Article> articles = service.getAllArticlesNotDelete();
+		Assert.assertTrue(articles != null && articles.size() != 0);
+		for(Article article: articles){
+			Assert.assertTrue(article.getIsDelete() == BlogConstant.IS_NOT_DELETE);
+		}
+	}
+	
+	
+	@Test
+	public void testGetAllArticlesDelete(){
+		ArrayList<Article> articles = service.getAllArticlesDelete();
+		Assert.assertTrue(articles != null && articles.size() != 0);
+		for(Article article: articles){
+			Assert.assertTrue(article.getIsDelete() == BlogConstant.IS_DELETE);
+		}
+	}
+	
+	@Test
+	public void testGetTypeByArticleId(){
+		service.addTypeToArticle(testArticle.getArticleId(), testType.getTypeId());
+		List<Type> types = service.getTypeByArticleId(testArticle.getArticleId());
+		Assert.assertTrue(types != null & types.size() == 1);
+		for(Type type: types){
+			Assert.assertEquals(type.getType(), testType.getType());
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 }

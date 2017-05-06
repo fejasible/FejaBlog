@@ -46,14 +46,12 @@
 <div class="blog-wrap">
 	<!-- Begin Blog -->
 	<div class="blog-grid">
-		<c:forEach items="${articles}" var="article" >
+		<c:forEach items="${ articles }" var="article" >
 	 		<div class="post format-standard box"> 
 				<h2 class="title"><a href="${pageContext.request.contextPath}/blog/${ article.articleId }">${ article.title }</a></h2>
 				<p>${ article.content }</p>
 				<div class="details">
 					<span class="icon-standard"><a href="#">${ article.date }</a></span>
-					<span class="likes"><a href="#" class="likeThis">11</a></span>
-					<span class="comments"><a href="#">0</a></span>
 				</div>
 			</div>
 		</c:forEach>

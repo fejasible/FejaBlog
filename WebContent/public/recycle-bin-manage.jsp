@@ -44,7 +44,24 @@
 			
 			
 			<div class="content box">
-			回收站管理
+				<h4>回收站</h4>
+				<div class="box">
+					<table>
+						<tr>
+							<th align="center">&emsp;&emsp;标题&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;恢复&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;彻底删除&emsp;&emsp;</th>
+						</tr>
+						<c:forEach items="${ articles }" var="article">
+							<tr>
+								<td align="center"><a href="">${ article.title }</a></td>
+								<td align="center"><a href="${pageContext.request.contextPath}/admin/recycleBin/manage/recover/${article.articleId}">恢复</a></td>
+								<td align="center"><a href="${pageContext.request.contextPath}/admin/recycleBin/manage/destroy/${article.articleId}">彻底删除</a></td>
+							</tr>
+						</c:forEach>
+					</table>
+					<div><p> </p></div>
+				</div>
 			</div>
 			
 			<div class="sidebar box">

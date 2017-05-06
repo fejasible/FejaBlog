@@ -26,7 +26,6 @@
 		<li><a href="${ pageContext.request.contextPath }/admin/article/manage">文章管理</a></li>
 		<li><a href="${ pageContext.request.contextPath }/admin/type/manage">类别管理</a></li>
 		<li><a href="${ pageContext.request.contextPath }/admin/website/manage">博客配置</a></li>
-		<li><a href="${ pageContext.request.contextPath }/admin/draft/manage">草稿箱</a></li>
 		<li><a href="${ pageContext.request.contextPath }/admin/recycleBin/manage">回收站</a></li>
 		<li><a href="${ pageContext.request.contextPath }/admin/logout">登出</a></li>
 	</ul>

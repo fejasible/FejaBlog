@@ -41,12 +41,10 @@ public class Controller {
 			d.put("num", types.get(i)[1]);
 			typesMap.add(d);
 		}
-		ArrayList<Article> recommendArticles = service.getAllRecommandArticles();
+		ArrayList<Article> recommendArticles = service.getAllVisibleAndRecommendAndNotDeleteArticles();
 		modelAndView.addObject("config", config);
 		modelAndView.addObject("dates", datesMap);
 		modelAndView.addObject("types", typesMap);
 		modelAndView.addObject("recommendArticles", recommendArticles);
 	}
-	
-
 }

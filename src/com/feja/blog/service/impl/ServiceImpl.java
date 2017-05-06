@@ -71,7 +71,7 @@ public class ServiceImpl implements Service{
 	}
 	
 	@Override
-	public ArrayList<Article> getAllRecommandArticles() {
+	public ArrayList<Article> getAllRecommendArticles() {
 		List<Integer> articleIds = getAllrecommandArticleIds();
 		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
 		ArrayList<Article> articles = new ArrayList<>();
@@ -84,6 +84,41 @@ public class ServiceImpl implements Service{
 		return articles;
 	}
 	
+	@Override
+	public ArrayList<Article> getAllVisibleAndRecommendAndNotDeleteArticles() {
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		ArticleExample articleExample = new ArticleExample();
+
+		RecommendExample recommendExample = new RecommendExample();
+		RecommendMapper recommendMapper = SpringContextHolder.getBean("recommendMapper");
+		List<Recommend> recommends = recommendMapper.selectByExample(recommendExample);
+		List<Integer> recommendArticleIds = new ArrayList<>();
+		for(Recommend recommend: recommends){
+			recommendArticleIds.add(recommend.getArticleId());
+		}
+		if(recommendArticleIds.size() == 0){
+			return new ArrayList<>();
+		}
+		
+		articleExample.or()
+			.andVisibleEqualTo(BlogConstant.IS_VISIBLE)
+			.andIsDeleteEqualTo(BlogConstant.IS_NOT_DELETE)
+			.andArticleIdIn(recommendArticleIds);
+		ArrayList<Article> articles = (ArrayList<Article>) articleMapper.selectByExample(articleExample);
+		return articles;
+	}
+
+	public ArrayList<Article> getAllVisibleAndNotDeleteArticles() {
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		ArticleExample articleExample = new ArticleExample();
+
+		articleExample.or()
+			.andVisibleEqualTo(BlogConstant.IS_VISIBLE)
+			.andIsDeleteEqualTo(BlogConstant.IS_NOT_DELETE);
+		ArrayList<Article> articles = (ArrayList<Article>) articleMapper.selectByExample(articleExample);
+		return articles;
+	}
+	
 	/**
 	 * 从recommend中获取所有article的id
 	 * @return
@@ -93,8 +128,10 @@ public class ServiceImpl implements Service{
 		RecommendMapper recommendMapper = SpringContextHolder.getBean("recommendMapper");
 		List<Recommend> recommends = recommendMapper.selectByExample(recommendExample);
 		List<Integer> articleIds = new ArrayList<Integer>();
-		for(Recommend recommend: recommends){
-			articleIds.add(recommend.getArticleId());
+		if(recommends != null && recommends.size() != 0){
+			for(Recommend recommend: recommends){
+				articleIds.add(recommend.getArticleId());
+			}
 		}
 		return articleIds;
 		
@@ -117,7 +154,10 @@ public class ServiceImpl implements Service{
 		}
 		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
 		ArticleExample articleExample = new ArticleExample();
-		articleExample.or().andArticleIdIn(articleIds);
+		articleExample.or()
+			.andArticleIdIn(articleIds)
+			.andIsDeleteEqualTo(BlogConstant.IS_NOT_DELETE)
+			.andVisibleEqualTo(BlogConstant.IS_VISIBLE);
 		List<Article> articles = articleMapper.selectByExample(articleExample);
 		return (ArrayList<Article>) articles;
 	}
@@ -167,7 +207,10 @@ public class ServiceImpl implements Service{
 		}
 		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
 		ArticleExample articleExample = new ArticleExample();
-		articleExample.or().andArticleIdIn(articleIds);
+		articleExample.or()
+			.andArticleIdIn(articleIds)
+			.andVisibleEqualTo(BlogConstant.IS_VISIBLE)
+			.andIsDeleteEqualTo(BlogConstant.IS_NOT_DELETE);
 		List<Article> articles = articleMapper.selectByExample(articleExample);
 		
 		return (ArrayList<Article>) articles;
@@ -181,7 +224,10 @@ public class ServiceImpl implements Service{
 	    calendar.setTime(date); 
 	    calendar.add(Calendar.MONTH,1);
 		Date afterDate = calendar.getTime();
-		articleExample.or().andDateBetween(date, afterDate);
+		articleExample.or()
+			.andDateBetween(date, afterDate)
+			.andIsDeleteEqualTo(BlogConstant.IS_NOT_DELETE)
+			.andVisibleEqualTo(BlogConstant.IS_VISIBLE);
 		List<Article> articles = articleMapper.selectByExample(articleExample);
 		return (ArrayList<Article>) articles;
 	}
@@ -203,6 +249,10 @@ public class ServiceImpl implements Service{
 			Type type = getType(articleType.getTypeId());
 			boolean isInTypeSorted = false;
 			String typeString = type.getType();
+			int articleId = articleType.getArticleId();
+			if(this.isArticleVisibleAndNotDelete(articleId) == false){
+				continue;
+			}
 			for(String[] count: typeSorted){
 				if(count[0].equals(typeString)){
 					isInTypeSorted = true;
@@ -237,9 +287,27 @@ public class ServiceImpl implements Service{
 	
 
 	@Override
+	public ArrayList<Article> getAllArticlesNotDelete() {
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		ArticleExample articleExample = new ArticleExample();
+		articleExample.or().andIsDeleteEqualTo(BlogConstant.IS_NOT_DELETE);
+		List<Article> articles = articleMapper.selectByExample(articleExample);
+		return (ArrayList<Article>) articles;
+	}
+	
+	@Override
+	public ArrayList<Article> getAllArticlesDelete() {
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		ArticleExample articleExample = new ArticleExample();
+		articleExample.or().andIsDeleteEqualTo(BlogConstant.IS_DELETE);
+		List<Article> articles = articleMapper.selectByExample(articleExample);
+		return (ArrayList<Article>) articles;
+	}
+
+	@Override
 	public ArrayList<String[]> getAllDatesSorted() {
 		ArrayList<String[]> datesSorted = new ArrayList<>();
-		ArrayList<Article> articles = getAllArticles();
+		ArrayList<Article> articles = getAllVisibleAndNotDeleteArticles();
 		for(Article article: articles){
 			String date = null;
 			try {
@@ -292,8 +360,8 @@ public class ServiceImpl implements Service{
 			return false;
 		}
 		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
-		articleMapper.updateByPrimaryKeySelective(article);
-		return true;
+		int raws = articleMapper.updateByPrimaryKeySelective(article);
+		return raws == 1 ? true : false;
 	}
 
 	@Override
@@ -552,7 +620,7 @@ public class ServiceImpl implements Service{
 		}else{
 			article.setIsDelete(BlogConstant.IS_NOT_DELETE);
 		}
-		articleMapper.updateByPrimaryKey(article);
+		articleMapper.updateByPrimaryKeySelective(article);
 		return true;
 	}
 
@@ -574,4 +642,37 @@ public class ServiceImpl implements Service{
 		}
 		return true;
 	}
+
+	@Override
+	public List<Type> getTypeByArticleId(int articleId) {
+		List<Type> types = new ArrayList<>();
+		ArticleTypeMapper articleTypeMapper = SpringContextHolder.getBean("articleTypeMapper");
+		ArticleTypeExample articleTypeExample = new ArticleTypeExample();
+		articleTypeExample.or().andArticleIdEqualTo(articleId);
+		List<ArticleType> articleTypes = articleTypeMapper.selectByExample(articleTypeExample);
+		if(articleTypes != null && articleTypes.size() != 0){
+			List<Integer> typeIds = new ArrayList<>();
+			for(ArticleType articleType: articleTypes){
+				typeIds.add(articleType.getTypeId());
+			}
+			TypeMapper typeMapper = SpringContextHolder.getBean("typeMapper");
+			TypeExample typeExample = new TypeExample();
+			typeExample.or().andTypeIdIn(typeIds);
+			types = typeMapper.selectByExample(typeExample);
+		}
+		return types;
+	}
+	
+	private boolean isArticleVisibleAndNotDelete(int articleId){
+		ArticleMapper articleMapper = SpringContextHolder.getBean("articleMapper");
+		ArticleExample example = new ArticleExample();
+		example.or()
+			.andArticleIdEqualTo(articleId)
+			.andVisibleEqualTo(BlogConstant.IS_VISIBLE)
+			.andIsDeleteEqualTo(BlogConstant.IS_NOT_DELETE);
+		List<Article> articles = articleMapper.selectByExample(example);
+		return articles == null || articles.size() == 0 ? false : true;
+		
+	}
+	
 }

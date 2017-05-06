@@ -2,13 +2,13 @@ package com.feja.blog.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.feja.blog.model.Article;
 import com.feja.blog.model.ArticleType;
-import com.feja.blog.model.Config;
 import com.feja.blog.model.ConfigWithBLOBs;
 import com.feja.blog.model.Recommend;
 import com.feja.blog.model.Type;
@@ -26,7 +26,8 @@ public interface Service {
 	Recommend getRecommand(int recommandId);
 	
 	//展示页面
-	ArrayList<Article> getAllRecommandArticles();
+	ArrayList<Article> getAllRecommendArticles();
+	ArrayList<Article> getAllVisibleAndRecommendAndNotDeleteArticles();
 	ArrayList<Article> getArticlesByType(String type);
 	ArrayList<Article> getArticlesByType(int id);
 	ArrayList<Article> getArticlesByDate(Date date);
@@ -59,10 +60,15 @@ public interface Service {
 	boolean updateCopyRight(String copyright);
 		//草稿箱管理
 		//回收站管理
-	boolean deleteArticle(int articleId, boolean recover);
+	boolean deleteArticle(int articleId, boolean delete);
 	boolean destroyArticle(int articleId);
 		//写文章页面
 	
 	//其他
 	ArrayList<Article> getAllArticles();
+	ArrayList<Article> getAllArticlesNotDelete();
+	ArrayList<Article> getAllArticlesDelete();
+	List<Type> getTypeByArticleId(int articleId);
+	
+	
 }

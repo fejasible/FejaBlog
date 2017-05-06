@@ -43,19 +43,50 @@
 		<div class="wrapper">
 			
 			
-			<div class="content box">、
-			文章管理
+			<div class="content box">
+				<h4>文章管理</h4>
+				<div class="box">
+					<table>
+						<tr>
+							<th align="center">&emsp;&emsp; id &emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;标题&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;编辑&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;可见&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;推荐&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;分类&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;删除&emsp;&emsp;</th>
+						</tr>
+						<c:forEach items="${ articles }" var="article">
+							<tr>
+								<td align="center">${ article.articleId }</td>
+								<td align="center"><a href="${pageContext.request.contextPath}/blog/${article.articleId}">${ article.title }</a></td>
+								<td align="center"><a href="${pageContext.request.contextPath}/admin/article/edit/${article.articleId}">编辑</a></td>
+								<td align="center">
+									<c:if test="${ article.visible == 1 }"><a style="color:pink" href="${pageContext.request.contextPath}/admin/article/manage/visible/${ article.articleId }">不可见</a></c:if>
+									<c:if test="${ article.visible == 0 }"><a href="${pageContext.request.contextPath}/admin/article/manage/visible/${ article.articleId }">可见</a></c:if>
+								</td>
+								<td align="center">
+									<% boolean isRecommend = false; %>
+									<c:forEach items="${ recommendArticles }" var="recommendArticle">
+										<c:if test="${ article.articleId == recommendArticle.articleId }"><% isRecommend = true; %><a href="${pageContext.request.contextPath}/admin/article/manage/recommend/${ article.articleId }">已推荐</a></c:if>
+									</c:forEach>
+									<c:if test="<%= isRecommend == false %>"><a style="color:pink" href="${pageContext.request.contextPath}/admin/article/manage/recommend/${ article.articleId }">未推荐</a></c:if>
+								</td>
+								
+								<td align="center">
+									<a href="">${ article.typeString }</a>
+								</td>
+								<td align="center"><a href="${pageContext.request.contextPath}/admin/article/manage/delete/${article.articleId}">删除</a></td>
+							</tr>
+						</c:forEach>
+					</table>
+					<div><p> </p></div>
+				</div>
 			</div>
-			
 			<div class="sidebar box">
 				<%@include file="/public/module/admin-option.jsp" %>
 			</div>
-			
-				
-				
-				
 		</div>
-		
 		<div class="clear"></div>
 		<%@include file="/public/footer.jsp" %>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/scripts.js"></script>

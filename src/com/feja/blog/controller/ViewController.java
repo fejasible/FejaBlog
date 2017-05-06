@@ -29,7 +29,7 @@ public class ViewController extends com.feja.blog.controller.Controller{
 		ModelAndView modelAndView = new ModelAndView("index");
 		
 		//获取推荐到首页的文章
-		ArrayList<Article> articles = service.getAllRecommandArticles();
+		ArrayList<Article> articles = service.getAllVisibleAndRecommendAndNotDeleteArticles();
 		modelAndView.addObject("articles", articles);
 		this.renderHeaderAndFooter(modelAndView);
 		return modelAndView;
@@ -50,7 +50,7 @@ public class ViewController extends com.feja.blog.controller.Controller{
 			articles = service.getArticlesByDate(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			articles = service.getAllRecommandArticles();
+			articles = service.getAllVisibleAndRecommendAndNotDeleteArticles();
 		}
 		modelAndView.addObject("articles", articles);
 		this.renderHeaderAndFooter(modelAndView);
@@ -69,14 +69,18 @@ public class ViewController extends com.feja.blog.controller.Controller{
 		//获取指定分类的文章
 		ArrayList<Article> articles = service.getArticlesByType(typeString);
 		if(articles == null){
-			articles = service.getAllRecommandArticles();
+			articles = service.getAllVisibleAndRecommendAndNotDeleteArticles();
 		}
 		modelAndView.addObject("articles", articles);
 		this.renderHeaderAndFooter(modelAndView);
 		return modelAndView;
 	}
 
-	
+	/**
+	 * 页面 得到指定id的文章
+	 * @param articleId
+	 * @return
+	 */
 	@RequestMapping(value="/blog/{articleId:[0-9]*}", method=RequestMethod.GET)
 	public ModelAndView blog(@PathVariable int articleId){
 		ModelAndView modelAndView = new ModelAndView("page-with-sidebar");
@@ -85,7 +89,7 @@ public class ViewController extends com.feja.blog.controller.Controller{
 			article = service.getArticle(articleId);
 		}
 		else{//为零，随机附上一篇推荐文章
-			ArrayList<Article> articles = service.getAllRecommandArticles();
+			ArrayList<Article> articles = service.getAllRecommendArticles();
 			article = articles.get(new Random().nextInt(articles.size()));
 		}
 		modelAndView.addObject("article", article);
@@ -94,6 +98,10 @@ public class ViewController extends com.feja.blog.controller.Controller{
 	}
 	
 	
+	/**
+	 * 页面 得到简介信息
+	 * @return
+	 */
 	@RequestMapping(value="/profile", method=RequestMethod.GET)
 	public ModelAndView profile(){
 		ModelAndView modelAndView = new ModelAndView("profile");
@@ -101,6 +109,10 @@ public class ViewController extends com.feja.blog.controller.Controller{
 		return modelAndView;
 	}
 
+	/**
+	 * 页面 联系我
+	 * @return
+	 */
 	@RequestMapping(value="/contact", method=RequestMethod.GET)
 	public ModelAndView contact(){
 		ModelAndView modelAndView = new ModelAndView("contact");

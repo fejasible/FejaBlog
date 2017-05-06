@@ -7,7 +7,7 @@
 <div class="header-wrapper opacity">
 	<div class="header">
 		<div class="logo">
-		    <a href="${pageContext.request.contextPath}/admin/view">
+		    <a href="${pageContext.request.contextPath}/admin/article/manage">
 				<img src="${pageContext.request.contextPath}/public/style/images/logo.png" alt="" />
 			</a>
 	    </div>

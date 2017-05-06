@@ -44,7 +44,22 @@
 			
 			
 			<div class="content box">
-			类别管理
+			<h4>类别管理</h4>
+				<div class="box">
+					<table>
+						<tr>
+							<th align="center">&emsp;&emsp;类别&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;编辑&emsp;&emsp;</th>
+							<th align="center">&emsp;&emsp;删除&emsp;&emsp;</th>
+						</tr>
+						<c:forEach items="${ types }" var="type">
+							<tr>
+								<td align="center"><a href="${pageContext.request.contextPath}/type/${type.type}">${ type.type }(${ type.num })</a></td>
+							</tr>
+						</c:forEach>
+					</table>
+					<div><p> </p></div>
+				</div>
 			</div>
 			
 			<div class="sidebar box">
