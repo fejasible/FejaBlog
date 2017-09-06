@@ -14,28 +14,18 @@
 		<div id="menu-wrapper">
 			<div id="menu" class="menu">
 				<ul id="tiny">
-					<li class="active"><a href="${pageContext.request.contextPath}/index">首页</a>
-						<ul>
-							<li><a href="public/post.html">Blog Post</a></li>
-						</ul>
-					</li>
+					<li class="active"><a href="${pageContext.request.contextPath}/index">首页</a></li>
 					<li><a href="${pageContext.request.contextPath}/blog/0">博客</a>
-						<ul>
+						<!-- <ul>
 							<li><a href="${pageContext.request.contextPath}/public/page-with-sidebar.jsp">Page With Sidebar</a></li>
 							<li><a href="${pageContext.request.contextPath}/public/full-width.html">Full Width</a></li>
-						</ul>
+						</ul> -->
 					</li>
-					<li><a href="${pageContext.request.contextPath}/profile">简介</a>
-						<ul>
-							<li><a href="${pageContext.request.contextPath}/public/typography.html">Typography</a></li>
-							<li><a href="${pageContext.request.contextPath}/public/columns.html">Columns</a></li>
-						</ul>
-					</li>
+					<li><a href="${pageContext.request.contextPath}/profile">简介</a></li>
 					<li><a href="${pageContext.request.contextPath}/contact">联系我</a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="clear"></div>
-		<!-- End Menu -->
 	</div>
 </div>

@@ -1,11 +1,7 @@
-package com.feja.blog.controller;
-
+package com.feja.blog.controller.admin;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,79 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.feja.blog.constant.BlogConstant;
+import com.feja.blog.controller.Controller;
 import com.feja.blog.model.Article;
-import com.feja.blog.model.Config;
-import com.feja.blog.model.ConfigWithBLOBs;
 import com.feja.blog.model.Type;
 import com.feja.blog.model.form.AddArticleForm;
 
-
 @org.springframework.stereotype.Controller
-public class AdminController extends Controller{
-
-	private Log logger = LogFactory.getLog(AdminController.class);
-	
-	/**
-	 * 请求登录页面
-	 * @return
-	 */
-	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public ModelAndView login(){
-		ModelAndView modelAndView = new ModelAndView("login");
-		Config config = new Config();
-		this.renderHeaderAndFooter(modelAndView);
-		modelAndView.addObject("config", config);
-		return modelAndView;
-	}
-	
-	
-	/**
-	 * 提交登录表单
-	 * @param config
-	 * @param redirectAttributes
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String login(Config config, RedirectAttributes redirectAttributes, HttpServletRequest request){
-		boolean result = service.validate(config.getUsername(), config.getPassword());
-		if(result){
-			HttpSession session = request.getSession();
-			session.setAttribute(BlogConstant.SENSSION_KEY_USERNAME, BlogConstant.SENSSION_KEY_USERNAME);
-			return "redirect:/admin/article/manage";
-		}
-		redirectAttributes.addFlashAttribute("loginResult", BlogConstant.LOGIN_FAILED_TEXT);
-		return "redirect:/login";
-	}
-	
-	/**
-	 * 管理员页面
-	 * @return
-	 */
-	@RequestMapping(value="/admin/view", method=RequestMethod.GET)
-	public ModelAndView adminView(){
-		ModelAndView modelAndView = new ModelAndView("admin-view");
-		modelAndView.addObject("article", new Article());
-		this.renderHeaderAndFooter(modelAndView);
-		return modelAndView;
-	}
-	
-	
-	/**
-	 * 登出
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value="/admin/logout", method=RequestMethod.GET)
-	public String logout(HttpServletRequest request){
-		HttpSession session = request.getSession();
-		session.removeAttribute(BlogConstant.SENSSION_KEY_USERNAME);
-		return "redirect:/index";
-	}
-	
+public class ArticleController extends Controller{
+	private Log logger = LogFactory.getLog(ArticleController.class);
 	
 	/**
 	 * 页面 添加文章
@@ -120,8 +53,8 @@ public class AdminController extends Controller{
 	 * 页面 编辑文章
 	 * @return
 	 */
-	@RequestMapping(value="/admin/article/add/{articleId:[0-9]*}", method=RequestMethod.GET)
-	public ModelAndView addArticle(@PathVariable int articleId){
+	@RequestMapping(value="/admin/article/edit/{articleId:[0-9]*}", method=RequestMethod.GET)
+	public ModelAndView editArticle(@PathVariable int articleId){
 		ModelAndView modelAndView = new ModelAndView("admin-view");
 		Article article = service.getArticle(articleId);
 		List<Type> types = service.getTypeByArticleId(article.getArticleId());
@@ -209,59 +142,7 @@ public class AdminController extends Controller{
 		service.updateArticleToRecommend(articleId, false);
 		return "redirect:/admin/article/manage";
 	}
-	
-	
-	
-	
-	/**
-	 * 页面 类别管理
-	 * @return
-	 */
-	@RequestMapping(value="/admin/type/manage", method=RequestMethod.GET)
-	public ModelAndView typeManage(){
-		ModelAndView modelAndView = new ModelAndView("type-manage");
-		renderHeaderAndFooter(modelAndView);
-		return modelAndView;
-	}
-	
-	
-	
-	/**
-	 * 页面 博客配置管理
-	 * @return
-	 */
-	@RequestMapping(value="/admin/website/manage", method=RequestMethod.GET)
-	public ModelAndView webSiteManage(){
-		ModelAndView modelAndView = new ModelAndView("website-manage");
-		renderHeaderAndFooter(modelAndView);
-		return modelAndView;
-	}
-	
-	
-	@RequestMapping(value="/admin/website/manage/edit", method=RequestMethod.POST)
-	public String editWebSiteConfig(ConfigWithBLOBs config){
-		service.updateBlogName(config.getBlogName());
-		service.updateBlogDescribe(config.getBlogDescribe());
-		service.updateCopyRight(config.getCopyright());
-		return "redirect:/admin/website/manage";
-	}
-	
-	
-	
-	/**
-	 * 页面 回收站管理
-	 * @return
-	 */
-	@RequestMapping(value="admin/recycleBin/manage", method=RequestMethod.GET)
-	public ModelAndView recycleBinManage(){
-		ModelAndView modelAndView = new ModelAndView("recycle-bin-manage");
-		ArrayList<Article> articles = service.getAllArticlesDelete();
-		modelAndView.addObject("articles", articles);
-		renderHeaderAndFooter(modelAndView);
-		return modelAndView;
-	}
-	
-	
+
 	/**
 	 * 操作 将文章从回收站中恢复
 	 * @param articleId
@@ -314,22 +195,16 @@ public class AdminController extends Controller{
 	
 	
 	/**
-	 * 请求编辑文章
+	 * 请求 编辑文章
 	 * @param articleId
 	 * @return
 	 */
-	@RequestMapping(value="/admin/article/edit/{articleId:[0-9]*}", method=RequestMethod.GET)
-	public String editArticle(@PathVariable int articleId){
-		return "redirect:/admin/article/add/"+articleId;
+	@RequestMapping(value="/admin/article/edit/{articleId:[0-9]*}", method=RequestMethod.POST)
+	public String editArticle(@PathVariable int articleId, @RequestParam String editorValue, AddArticleForm articleForm){
+		Article article = articleForm.getArticle();
+		article.setContent(editorValue);
+		service.editArticle(article);
+		return "redirect:/admin/article/manage";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

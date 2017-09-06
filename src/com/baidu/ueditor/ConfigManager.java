@@ -147,6 +147,9 @@ public final class ConfigManager {
 		conf.put( "savePath", savePath );
 		conf.put( "rootPath", this.rootPath );
 		
+		//TODO my
+		conf.put("contextPath", this.contextPath);
+		
 		return conf;
 		
 	}

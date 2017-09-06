@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.datetime.DateFormatter;
 
@@ -21,4 +23,14 @@ public class Util{
 	    return toDate;
 	}
 	
+	/**
+	 * http://www.xxx.xx/webapp
+	 * @param request
+	 * @return
+	 */
+	public static String getWebappRootPath(HttpServletRequest request){
+		String path = request.getContextPath();
+		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+		return basePath;
+	}
 }

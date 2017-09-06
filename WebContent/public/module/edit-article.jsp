@@ -7,15 +7,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/article.js"></script>
-<form:form id="article_form" commandName="article" action="${pageContext.request.contextPath}/admin/article/add/${ article.typeString }" method="post">
+<form:form id="article_form" commandName="article" action="${pageContext.request.contextPath}/admin/article/edit/${ article.articleId }" method="post">
 	<form:hidden path="articleId"/>
 	<form:hidden path="visible"/>
-	<h4>添加文章</h4>
+	<h4>编辑文章</h4>
 	<div class="box">
 		<table>
+			<tr><td><h5>文章  ID ：</h5></td><td>${ article.articleId }</td></tr>
 			<tr><td><h5>编辑标题：</h5></td><td><form:input path="title"></form:input></td></tr>
 			<tr><td><h5>编辑分类：</h5></td><td><form:input path="typeString"/></td></tr>
-			<tr><td><h5>是否可见：</h5></td><td>默认可见，在文章管理中设置</td></tr>
+			<c:if test="${ article.visible==0 }"><tr><td><h5>是否可见：</h5></td><td>是</td></tr></c:if>
+			<c:if test="${ article.visible==1 }"><tr><td><h5>是否可见：</h5></td><td>否</td></tr></c:if>
+			<c:if test="${ article.visible!=0 && article.visible!=1 }"><tr><td><h5>是否可见：</h5></td><td>默认不可见，请在文章管理中设置</td></tr></c:if>
 		</table>
 		<div><p> </p></div>
 	</div>
@@ -40,7 +43,7 @@
     </script>
 	<div><p> </p></div>
 	<div class="box" style="text-align:center">
-		<form:button type="submit">发表文章</form:button>
+		<form:button type="submit">确认修改</form:button>
 		<div><p> </p></div>
 	</div>
 </form:form>

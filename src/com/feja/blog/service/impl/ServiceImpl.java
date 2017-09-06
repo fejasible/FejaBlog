@@ -17,6 +17,7 @@ import com.feja.blog.context.SpringContextHolder;
 import com.feja.blog.mapper.ArticleMapper;
 import com.feja.blog.mapper.ArticleTypeMapper;
 import com.feja.blog.mapper.ConfigMapper;
+import com.feja.blog.mapper.ContactMapper;
 import com.feja.blog.mapper.RecommendMapper;
 import com.feja.blog.mapper.TypeMapper;
 import com.feja.blog.model.Article;
@@ -25,6 +26,8 @@ import com.feja.blog.model.ArticleType;
 import com.feja.blog.model.ArticleTypeExample;
 import com.feja.blog.model.Config;
 import com.feja.blog.model.ConfigWithBLOBs;
+import com.feja.blog.model.Contact;
+import com.feja.blog.model.ContactExample;
 import com.feja.blog.model.Recommend;
 import com.feja.blog.model.RecommendExample;
 import com.feja.blog.model.Type;
@@ -561,6 +564,20 @@ public class ServiceImpl implements Service{
 		return true;
 		
 	}
+	
+	@Override
+	public boolean deleteTypeSafely(int typeId){
+		ArticleTypeMapper articleTypeMapper = SpringContextHolder.getBean("articleTypeMapper");
+		TypeMapper typeMapper = SpringContextHolder.getBean("typeMapper");
+		ArticleTypeExample articleTypeExample = new ArticleTypeExample();
+		articleTypeExample.or().andTypeIdEqualTo(typeId);
+		List<ArticleType> articleTypes = articleTypeMapper.selectByExample(articleTypeExample);
+		if(articleTypes == null || articleTypes.size() == 0){
+			return typeMapper.deleteByPrimaryKey(typeId) == 1 ? true : false;
+		}else{
+			return false;
+		}
+	}
 
 	@Override
 	public boolean updateTypeVisible(int typeId, boolean visible) {
@@ -606,6 +623,17 @@ public class ServiceImpl implements Service{
 		configMapper.updateByPrimaryKeySelective(config);
 		return true;
 	}
+
+	@Override
+	public boolean updateProfile(String profile) {
+		ConfigMapper configMapper = SpringContextHolder.getBean("configMapper");
+		ConfigWithBLOBs config = new ConfigWithBLOBs();
+		config.setConfigId(BlogConstant.USED_CONFIG);
+		config.setProfile(profile);
+		configMapper.updateByPrimaryKeySelective(config);
+		return true;
+	}
+	
 
 	@Override
 	public boolean deleteArticle(int articleId, boolean isDelete) {
@@ -673,6 +701,18 @@ public class ServiceImpl implements Service{
 		List<Article> articles = articleMapper.selectByExample(example);
 		return articles == null || articles.size() == 0 ? false : true;
 		
+	}
+
+	@Override
+	public int addContact(Contact contact) {
+		ContactMapper contactMapper = SpringContextHolder.getBean("contactMapper");
+		
+		if(contact.getContent() == null) contact.setContent("");
+		if(contact.getEmail() == null) contact.setEmail("");
+		if(contact.getNickname() == null) contact.setNickname("");
+		if(contact.getTitle() == null) contact.setTitle("");
+		
+		return contactMapper.insertSelective(contact);
 	}
 	
 }

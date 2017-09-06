@@ -19,7 +19,9 @@
 	<mvc:annotation-driven/>
 	
 	<!-- 公开路径 -->
-	<mvc:resources mapping="/public/**" location="/public/"/>
+	<mvc:resources mapping="/public/plugin/**" location="/public/plugin/"/>
+	<mvc:resources mapping="/public/style/**" location="/public/style/"/>
+	<mvc:resources mapping="/ueditor/**" location="/ueditor/"/>
 	
 	<!-- 拦截器  -->
 	<mvc:interceptors>  
@@ -28,6 +30,19 @@
             <bean class="com.feja.blog.interceptor.SecurityInterceptor" />  
         </mvc:interceptor>
     </mvc:interceptors>
+	
+	<!-- 上传文件大小限制 -->    
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">    
+    	<property name="maxUploadSize" value="4194304" />    
+	</bean> 
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+        <property name="exceptionMappings">  
+            <props>  
+                <!-- 遇到MaxUploadSizeExceededException异常时，自动跳转到error.jsp页面 -->  
+                <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">error</prop>  
+            </props>
+        </property>  
+    </bean> 
 	
 	<!-- 返回内容配置 -->       
 	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
@@ -66,8 +81,8 @@
 	    <property name="username">  
 	        <value>root</value>  
 	    </property>  
-	    <property name="password">  
-	        <value>123456</value>
+	    <property name="password">
+	        <value>mm52081bu7</value>
 	    </property>
 	</bean>  
 	
@@ -98,6 +113,11 @@
 	
 	<bean id="recommendMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 	    <property name="mapperInterface" value="com.feja.blog.mapper.RecommendMapper"></property>  
+	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
+	</bean>	
+	
+	<bean id="contactMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.feja.blog.mapper.ContactMapper"></property>  
 	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
 	</bean>
 </beans>

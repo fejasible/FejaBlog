@@ -29,14 +29,14 @@ public class SecurityInterceptor implements HandlerInterceptor {
         String username = (String) session.getAttribute(BlogConstant.SENSSION_KEY_USERNAME);
         // 判断如果没有取到用户信息，就跳转到登陆页面，提示用户进行登陆  
         if (username == null || "".equals(username)) {
-            response.sendRedirect("/FejaBlog/login");
+            response.sendRedirect(request.getContextPath()+"/login");
             return true;
         }else{
         	if(username.equals(BlogConstant.SENSSION_KEY_USERNAME)){
         		return true;
         	}
         }
-        response.sendRedirect("/FejaBlog/login");
+        response.sendRedirect(request.getContextPath()+"/login");
         return true;
     }  
   

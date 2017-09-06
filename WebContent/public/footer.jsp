@@ -14,12 +14,6 @@
 				</c:forEach>
 				</ul>
 			</div>
-			<div class="widget widget_search">
-				<h3 class="widget-title">搜索</h3>
-				<form class="searchform" method="get" action="#">
-					<input type="text" name="s" value="type and hit enter" onFocus="this.value=''" onBlur="this.value='type and hit enter'"/>
-				</form>
-			</div>
 		</div>
 		<div id="second" class="widget-area">
 			<div class="widget widget_archive">
@@ -38,8 +32,8 @@
 					<c:forEach items="${ recommendArticles }" var="article">
 						<li> 
 							<div class="meta">
-							    <h6><a href="#">${ article.title }</a></h6>
-							    <em>${ article.date }</em>
+							    <h6><a href="${pageContext.request.contextPath}/blog/${ article.articleId }">${ article.title }</a></h6>
+							    <em><fmt:formatDate value="${ article.date }" pattern="yyyy-MM-dd"/></em>
 						    </div>
 						</li>
 					</c:forEach>

@@ -1,5 +1,7 @@
 package com.feja.blog.model;
 
+import com.feja.blog.util.JsonUtil;
+
 public class ConfigWithBLOBs extends Config {
     private String blogDescribe;
 
@@ -20,4 +22,9 @@ public class ConfigWithBLOBs extends Config {
     public void setProfile(String profile) {
         this.profile = profile == null ? null : profile.trim();
     }
+
+	@Override
+	public String toString() {
+		return JsonUtil.writeValueAsString(this);
+	}
 }

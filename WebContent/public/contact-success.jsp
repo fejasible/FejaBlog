@@ -45,21 +45,8 @@
 <div class="intro">${ config.blogDescribe }</div>
 <div class="content box">
 
-	<h1 class="title">联系我</h1>
-
-	<div class="form-container">
-		<form class="forms" action="${pageContext.request.contextPath}/contact/contactMe" method="post">
-			<fieldset>
-				<ol>
-					<li class="form-row text-input-row"><label>您的昵称</label><input type="text" name="nickname" value="" class="text-input required" title="" /></li> 
-					<li class="form-row text-input-row"><label>您的邮件地址</label><input type="text" name="email" value="" class="text-input required email" title="" /></li> 
-					<li class="form-row text-input-row"><label>标题</label><input type="text" name="title" value="" class="text-input required" title="" /></li> 
-					<li class="form-row text-area-row"><label>内容</label><textarea name="content" class="text-area required"></textarea></li> 
-					<li class="button-row"><input type="submit" value="发送" name="submit" class="btn-submit" /></li>
-				</ol>
-			</fieldset>
-		</form>
-	</div>
+	<h2 class="title">您发送的信息已记录，非常感谢您的联系！</h2>
+	
 </div>
 <div class="sidebar box">
 	<div class="sidebox widget">

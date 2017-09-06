@@ -9,6 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>${ config.blogName }</title>
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/public/style/images/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" type="text/css" media="all" href="${pageContext.request.contextPath}/public/style.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/style/css/media-queries.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/style/js/player/mediaelementplayer.css" />
@@ -43,10 +44,10 @@
 	<div class="wrapper">
 		<div class="box">
 			<form:form commandName="config" action="${ pageContext.request.contextPath }/login" method="post">
-				<div><p>用户名<form:input type="text" value="" path="username"/></p></div>
-				<div><p>&nbsp;密码<form:input type="password" value="" path="password"/></p></div>
+				<div><p>火星<form:input type="text" value="" path="username"/></p></div>
+				<div><p>&nbsp;衬衫<form:input type="password" value="" path="password"/></p></div>
 				<div>
-					<input type="submit" value="登录">
+					<input type="submit" value="起源">
 				</div>
 				<c:if test="${ loginResult!=null }">
 					<div style="text-align:center"><a>${ loginResult }</a></div>

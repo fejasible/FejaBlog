@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>${ config.blogName }</title>
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/public/style/images/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" type="text/css" media="all" href="${pageContext.request.contextPath}/public/style.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/style/css/media-queries.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/style/js/player/mediaelementplayer.css" />
@@ -23,6 +24,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/mediaelementplayer.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/jquery.dcflickr.1.0.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/public/style/js/twitter.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/public/plugin/editorue/third-party/SyntaxHighlighter/shCore.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/plugin/editorue/third-party/SyntaxHighlighter/shCoreDefault.css">
 <script type="text/javascript">
 	function getRootPath_dc() {
 	    var pathName = window.location.pathname.substring(1);
@@ -35,14 +38,15 @@
 	    }
 	}
 	$.backstretch(getRootPath_dc()+"/public/style/images/bg/9.jpg");
+	SyntaxHighlighter.all();
 </script>
+
 </head>
 <body>
 
 <%@include file="/public/menu.jsp" %>
 
 <div class="wrapper">
-<div class="intro">${ config.blogDescribe }</div>
 <div class="content box">
 	<h1 class="title">${ article.title }</h1>
 	<p>${ article.content }</p>
@@ -54,25 +58,13 @@
 				<c:forEach items="${ recommendArticles }" var="article">
 				  	<li> 
 						<div class="meta">
-						    <h6><a href="#">${ article.title }</a></h6>
-						    <em>${ article.date }</em>
+						    <h6><a href="${pageContext.request.contextPath}/blog/${ article.articleId }">${ article.title }</a></h6>
+						    <em><fmt:formatDate value="${ article.date }" pattern="yyyy-MM-dd"/></em>
 					    </div>
 					</li>
 				</c:forEach>
 			</ul>
 			
-	</div>
-	
-	<div class="sidebox widget">
-		<h3 class="widget-title">Search</h3>
-		<form class="searchform" method="get" action="#">
-			<input type="text" name="s" value="type and hit enter" onFocus="this.value=''" onBlur="this.value='type and hit enter'"/>
-		</form>
-	</div>
-	
-	<div class="sidebox widget">
-		<h3 class="widget-title">简介</h3>
-		<div>简介内容</div>
 	</div>
 </div>
 <!--End Sidebar -->

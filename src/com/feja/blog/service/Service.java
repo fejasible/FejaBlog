@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import com.feja.blog.model.Article;
 import com.feja.blog.model.ArticleType;
 import com.feja.blog.model.ConfigWithBLOBs;
+import com.feja.blog.model.Contact;
 import com.feja.blog.model.Recommend;
 import com.feja.blog.model.Type;
 
@@ -52,12 +53,24 @@ public interface Service {
 		//类别管理
 	int addType(String type);
 	boolean editType(Type type);
+	/**
+	 * 删除文章类别，将连同文章一起删除
+	 * @param typeId
+	 * @return
+	 */
 	boolean deleteType(int typeId);
+	/**
+	 * 删除文章类别，若此类别中仍包含有文章则不予删除并返回false
+	 * @param typeId
+	 * @return
+	 */
+	boolean deleteTypeSafely(int typeId);
 	boolean updateTypeVisible(int typeId, boolean visible);
 		//博客配置管理
 	boolean updateBlogName(String blogName);
 	boolean updateBlogDescribe(String describe);
 	boolean updateCopyRight(String copyright);
+	boolean updateProfile(String profile);
 		//草稿箱管理
 		//回收站管理
 	boolean deleteArticle(int articleId, boolean delete);
@@ -70,5 +83,6 @@ public interface Service {
 	ArrayList<Article> getAllArticlesDelete();
 	List<Type> getTypeByArticleId(int articleId);
 	
-	
+	//联系我
+	int addContact(Contact contact);
 }

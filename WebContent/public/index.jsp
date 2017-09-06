@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>${ config.blogName }</title>
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/public/style/images/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" type="text/css" media="all" href="${pageContext.request.contextPath}/public/style.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/style/css/media-queries.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/style/js/player/mediaelementplayer.css" />
@@ -51,7 +52,7 @@
 				<h2 class="title"><a href="${pageContext.request.contextPath}/blog/${ article.articleId }">${ article.title }</a></h2>
 				<p>${ article.content }</p>
 				<div class="details">
-					<span class="icon-standard"><a href="#">${ article.date }</a></span>
+					<span class="icon-standard"><fmt:formatDate value="${ article.date }" pattern="yyyy-MM-dd"/></span>
 				</div>
 			</div>
 		</c:forEach>

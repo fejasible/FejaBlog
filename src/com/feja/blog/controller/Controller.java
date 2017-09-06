@@ -23,6 +23,8 @@ public class Controller {
 	protected void renderHeaderAndFooter(ModelAndView modelAndView){
 		//获取基本信息
 		ConfigWithBLOBs config = service.getConfig(BlogConstant.USED_CONFIG);
+		config.setUsername("");
+		config.setPassword("");
 		//获取日期归档
 		ArrayList<String[]> dates = service.getAllDatesSorted();
 		ArrayList<HashMap<String, String>> datesMap = new ArrayList<>();

@@ -9,5 +9,6 @@
         <mapper resource="com/feja/blog/mapping/ConfigMapper.xml"/>
         <mapper resource="com/feja/blog/mapping/RecommendMapper.xml"/>
         <mapper resource="com/feja/blog/mapping/TypeMapper.xml"/>
+        <mapper resource="com/feja/blog/mapping/ContactMapper.xml"/>
     </mappers>  
 </configuration>
