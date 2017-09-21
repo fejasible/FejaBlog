@@ -19,8 +19,7 @@
 	<mvc:annotation-driven/>
 	
 	<!-- 公开路径 -->
-	<mvc:resources mapping="/public/plugin/**" location="/public/plugin/"/>
-	<mvc:resources mapping="/public/style/**" location="/public/style/"/>
+	<mvc:resources mapping="/public/**" location="/public/"/>
 	<mvc:resources mapping="/ueditor/**" location="/ueditor/"/>
 	
 	<!-- 拦截器  -->
@@ -82,7 +81,7 @@
 	        <value>root</value>  
 	    </property>  
 	    <property name="password">
-	        <value>mm52081bu7</value>
+	        <value>123456</value>
 	    </property>
 	</bean>  
 	
