@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="st" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html lang="en-US">
 <head>
@@ -60,7 +61,12 @@
 						<c:forEach items="${ articles }" var="article">
 							<tr>
 								<td align="center">${ article.articleId }</td>
-								<td align="center"><a href="${pageContext.request.contextPath}/blog/${article.articleId}">${ article.title }</a></td>
+								<td align="center">
+									<a title="${ article.title }" href="${pageContext.request.contextPath}/blog/${article.articleId}">
+										<c:if test="${ fn:length(article.title) > 9 }">${ fn:substring(article.title,0,8)}..</c:if>
+										<c:if test="${ fn:length(article.title) < 10 }">${ article.title }</c:if>
+									</a>
+								</td>
 								<td align="center"><a href="${pageContext.request.contextPath}/admin/article/edit/${article.articleId}">编辑</a></td>
 								<td align="center">
 									<c:if test="${ article.visible == 1 }"><a style="color:pink" href="${pageContext.request.contextPath}/admin/article/manage/visible/${ article.articleId }">不可见</a></c:if>

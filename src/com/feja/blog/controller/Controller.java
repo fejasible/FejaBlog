@@ -43,6 +43,8 @@ public class Controller {
 			d.put("num", types.get(i)[1]);
 			typesMap.add(d);
 		}
+		
+		//获取推荐文章
 		ArrayList<Article> recommendArticles = service.getAllVisibleAndRecommendAndNotDeleteArticles();
 		modelAndView.addObject("config", config);
 		modelAndView.addObject("dates", datesMap);

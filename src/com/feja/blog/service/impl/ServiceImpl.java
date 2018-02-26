@@ -108,6 +108,7 @@ public class ServiceImpl implements Service{
 			.andIsDeleteEqualTo(BlogConstant.IS_NOT_DELETE)
 			.andArticleIdIn(recommendArticleIds);
 		ArrayList<Article> articles = (ArrayList<Article>) articleMapper.selectByExample(articleExample);
+		
 		return articles;
 	}
 
@@ -267,6 +268,20 @@ public class ServiceImpl implements Service{
 				typeSorted.add(new String[]{type.getType(), "1"});
 			}
 		}
+		typeSorted.sort(new Comparator<String[]>() {
+
+			@Override
+			public int compare(String[] o1, String[] o2) {
+				if(o1[0].compareTo(o2[0])<0){
+					return -1;
+				}else if(o1[0].compareTo(o2[0])==0){
+					return 0;
+				}else{
+					return 1;
+				}
+			}
+			
+		});
 		return typeSorted;
 	}
 	
@@ -330,6 +345,20 @@ public class ServiceImpl implements Service{
 				datesSorted.add(new String[]{date, "1"});
 			}
 		}
+		datesSorted.sort(new Comparator<String[]>() {
+
+			@Override
+			public int compare(String[] o1, String[] o2) {
+				if(o1[0].compareTo(o2[0])<0){
+					return 1;
+				}else if(o1[0].compareTo(o2[0])==0){
+					return 0;
+				}else{
+					return -1;
+				}
+			}
+			
+		});
 		return datesSorted;
 	}
 	
