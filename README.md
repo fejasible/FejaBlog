@@ -1,2 +1,2 @@
 # FejaBlog
-#### 学习springMVC时制作的博客小站
+#### 学习SSM时制作的博客小站，集成UEditor
